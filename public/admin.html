@@ -4,159 +4,513 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Quiz Admin</title>
+<title>Quiz Admin — Academic Dashboard</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet"></noscript>
+
 <style>
-:root{--purple:#6b4cff;--bg:#141416;--panel:#232326;--line:#3a3a40;--orange:#ff7a14;--muted:#a8a6bd;--good:#45c26d;--bad:#ff5a4f}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:3px solid #fff;outline-offset:2px}
-.hidden{display:none!important}
-header{background:var(--purple);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-header h1{margin:0;font-size:19px}
-header button{background:rgba(0,0,0,.28);border:none;border-radius:10px;padding:8px 14px;font-weight:600}
-.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
-.login{max-width:380px;margin:80px auto;padding:0 16px}
-.login .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
-.login h2{margin:0 0 4px}.login p{margin:0 0 16px;color:var(--muted)}
-input,select,textarea{width:100%;background:#1a1a1d;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px}
-input:focus,select:focus,textarea:focus{border-color:var(--orange);outline:none}
-.btn{background:var(--orange);color:#111;border:none;border-radius:10px;padding:11px 18px;font-weight:700}
-.btn.sec{background:transparent;color:#fff;border:1px solid var(--line);font-weight:600}
-.btn.del{background:transparent;color:var(--bad);border:1px solid #5a2b28;font-weight:600;padding:6px 10px;font-size:12.5px}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.err{color:var(--bad);margin-top:10px}.ok{color:var(--good);margin-top:10px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
-.tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-weight:600}
-.tab[aria-selected=true]{background:var(--orange);border-color:var(--orange);color:#111}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
-.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12.5px}
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
-.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;justify-content:space-between}
-.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;user-select:none;background:#1d1d20;position:sticky;top:0}
-tr:last-child td{border-bottom:none}
-td small{display:block;color:var(--muted)}
-.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-weight:700;font-size:12.5px}
-.hi{background:#173d27;color:var(--good)}.mid{background:#3d3217;color:#f2c14e}.lo{background:#3d1b19;color:var(--bad)}
-.empty{padding:30px;text-align:center;color:var(--muted)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
-.card h3{margin:0 0 4px;font-size:16px}.card .meta{color:var(--muted);font-size:13px;margin-bottom:10px}
-.card .acts{display:flex;gap:8px;flex-wrap:wrap}
-textarea{min-height:260px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
-label{display:block;margin:12px 0 6px;font-weight:500;color:#d8d4f5}
-.help{color:var(--muted);font-size:13px;line-height:1.55}
-a{color:#b9a8ff}
-/* Confirmation modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:200;padding:20px}
-.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:360px;width:100%}
-.modal-msg{margin:0 0 6px;font-size:15.5px;font-weight:600}
-.modal-sub{margin:0 0 20px;color:var(--muted);font-size:13.5px}
-.modal-acts{display:flex;gap:10px;justify-content:flex-end}
-/* Edit label inline */
-.edit-label-form{display:flex;gap:8px;margin-top:10px;align-items:center}
-.edit-label-form input{padding:8px 10px;font-size:14px;border-radius:8px}
-/* Spinner */
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
-@media(max-width:560px){.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:20px}}
+:root {
+  --bg: #09090b;
+  --panel: #121215;
+  --surface: #18181b;
+  --surface-hover: #212126;
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  --border-active: #52525b;
+
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-faint: #71717a;
+
+  --primary: #fafafa;
+  --primary-fg: #09090b;
+  --accent: #3b82f6;
+  --good: #10b981;
+  --good-bg: rgba(16, 185, 129, 0.1);
+  --bad: #ef4444;
+  --bad-bg: rgba(239, 68, 68, 0.1);
+  --warn: #f59e0b;
+  --warn-bg: rgba(245, 158, 11, 0.1);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13.5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hidden { display: none !important; }
+
+/* Dashboard Header */
+header {
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+header h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Page Layout */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+/* Login Modal / Card */
+.login-view {
+  max-width: 380px;
+  margin: 100px auto;
+  padding: 0 16px;
+}
+.login-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+.login-card h2 { margin: 0 0 6px; font-size: 18px; font-weight: 700; }
+.login-card p { margin: 0 0 20px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+
+/* Inputs & Form Elements */
+input, select, textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13.5px;
+  color: var(--text-main);
+  transition: border-color 0.15s ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+textarea {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  min-height: 240px;
+}
+
+/* Buttons */
+.btn {
+  background: var(--primary);
+  color: var(--primary-fg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+.btn:hover { opacity: 0.92; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-sec {
+  background: var(--surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+.btn-sec:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-active);
+}
+
+.btn-del {
+  background: transparent;
+  color: var(--bad);
+  border: 1px solid var(--border);
+  padding: 5px 9px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+.btn-del:hover {
+  background: var(--bad-bg);
+  border-color: var(--bad);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.tab:hover { color: var(--text-main); }
+.tab[aria-selected="true"] {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Dashboard Metric Cards */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+.stat-card .label {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.stat-card .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Filter Toolbar */
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.count-label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* Data Table */
+.table-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+th {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #141417;
+  cursor: pointer;
+  user-select: none;
+}
+th:hover { color: var(--text-main); }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.015); }
+td small {
+  display: block;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Score Pills */
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+.pill.hi { background: var(--good-bg); color: var(--good); }
+.pill.mid { background: var(--warn-bg); color: var(--warn); }
+.pill.lo { background: var(--bad-bg); color: var(--bad); }
+
+/* Week Cards */
+.week-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.week-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.week-title {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge-state {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.badge-state.current { background: rgba(59,130,246,0.15); color: var(--accent); }
+.badge-state.closed { background: #27272a; color: var(--text-faint); }
+.week-courses {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.week-acts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Modal Window */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  z-index: 200;
+  padding: 20px;
+}
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+}
+.modal-msg { margin: 0 0 6px; font-size: 16px; font-weight: 700; }
+.modal-sub { margin: 0 0 20px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+.modal-acts { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Inline Edit Field */
+.edit-row {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+.edit-row input { flex: 1; }
+
+/* Micro-spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 6px;
+}
+
+@media (max-width: 640px) {
+  .stats { grid-template-columns: 1fr; }
+  .table-actions { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
-<div id="login" class="login">
-  <div class="box">
-    <h2>Quiz admin</h2><p>Enter the admin password to see scores.</p>
-    <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
-    <div style="margin-top:14px"><button class="btn" id="loginBtn" style="width:100%">Sign in</button></div>
-    <div id="loginErr" class="err" role="alert"></div>
+
+<div id="login" class="login-view">
+  <div class="login-card">
+    <h2>Academic Portal Admin</h2>
+    <p>Authenticate with your administration master key to view exam records and publish assessments.</p>
+    <div style="margin-bottom:14px">
+      <input id="pw" type="password" placeholder="Admin password" autocomplete="current-password">
+    </div>
+    <button class="btn" id="loginBtn" style="width:100%">Sign in</button>
+    <div id="loginErr" style="color:var(--bad);margin-top:10px;font-size:12.5px" role="alert"></div>
   </div>
 </div>
 
 <div id="app" class="hidden">
   <header>
-    <h1>Quiz admin</h1>
-    <div>
-      <button id="refresh">Refresh</button>
-      <button id="logout">Sign out</button>
+    <div class="brand-group">
+      <h1>Weekly Quiz Admin</h1>
+      <span class="brand-tag">Academic v2.0</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-sec" id="refresh">Refresh</button>
+      <button class="btn btn-sec" id="logout">Sign out</button>
     </div>
   </header>
+
   <main class="wrap">
-    <div class="tabs" role="tablist" aria-label="Admin sections">
-      <button class="tab" role="tab" id="tScores" aria-selected="true" aria-controls="scores">Scores</button>
-      <button class="tab" role="tab" id="tWeeks"  aria-selected="false" aria-controls="weeks">Weeks</button>
+    <div class="tabs" role="tablist" aria-label="Admin Navigation">
+      <button class="tab" role="tab" id="tScores" aria-selected="true" aria-controls="scores">Assessment Records</button>
+      <button class="tab" role="tab" id="tWeeks" aria-selected="false" aria-controls="weeks">Session & Week Modules</button>
     </div>
 
+    <!-- Scores / Records View -->
     <section id="scores" role="tabpanel" aria-labelledby="tScores">
       <div class="stats">
-        <div class="stat"><b id="sAttempts">0</b><span>Attempts</span></div>
-        <div class="stat"><b id="sPeople">0</b><span>People</span></div>
-        <div class="stat"><b id="sAvg">0%</b><span>Average</span></div>
+        <div class="stat-card">
+          <div class="label">Total Exam Submissions</div>
+          <div class="val" id="sAttempts">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Unique Candidates</div>
+          <div class="val" id="sPeople">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Cohort Average Score</div>
+          <div class="val" id="sAvg">0%</div>
+        </div>
       </div>
-      <div class="filters">
-        <select id="fWeek"   aria-label="Filter by week"></select>
-        <select id="fCourse" aria-label="Filter by quiz"></select>
-        <select id="fMode"   aria-label="Filter attempt type">
-          <option value="all">All attempts</option>
-          <option value="first">First attempts only</option>
-          <option value="best">Best attempt per person</option>
+
+      <div class="filter-bar">
+        <select id="fWeek" aria-label="Select session"></select>
+        <select id="fCourse" aria-label="Select course"></select>
+        <select id="fMode" aria-label="Submission filter">
+          <option value="all">All Submissions</option>
+          <option value="first">Initial Attempts Only</option>
+          <option value="best">Highest Attempt Per Candidate</option>
         </select>
-        <input id="fSearch" placeholder="Search name or contact" aria-label="Search by name or contact">
+        <input id="fSearch" placeholder="Search by candidate name or matriculation…" aria-label="Candidate search">
       </div>
-      <div class="bar">
-        <span class="help" id="count" aria-live="polite"></span>
-        <button class="btn sec" id="csv">Download CSV</button>
+
+      <div class="table-actions">
+        <span class="count-label" id="count" aria-live="polite"></span>
+        <button class="btn btn-sec" id="csv">Export CSV</button>
       </div>
-      <div class="tw">
-        <table aria-label="Quiz results">
-          <caption class="hidden">Quiz results — sortable by clicking column headings</caption>
-          <thead><tr id="thead"></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
+
+      <div class="table-card">
+        <div class="table-wrap">
+          <table aria-label="Exam Submissions">
+            <thead><tr id="thead"></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
+    <!-- Weeks / Sessions View -->
     <section id="weeks" class="hidden" role="tabpanel" aria-labelledby="tWeeks">
       <div id="weekList"></div>
-      <div class="card">
-        <h3>Add a new week</h3>
-        <p class="help">Each week is a set of quizzes. Old weeks stay open for newcomers until you close them. To make questions: upload the new PDFs to Claude, ask for "this week's quiz in the admin JSON format", then paste the result below.</p>
-        <label for="wLabel">Week label</label>
-        <input id="wLabel" placeholder="e.g. Week 2 (19 Oct)">
-        <label for="wJson">Quiz JSON</label>
-        <textarea id="wJson" spellcheck="false" placeholder="Paste the JSON here&#10;&#10;As you type, a live preview will appear below."></textarea>
-        <div id="wMsg" aria-live="polite"></div>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <button class="btn" id="wCreate">Publish week</button>
-          <button class="btn sec" id="wTemplate">Insert example format</button>
+
+      <div class="week-card" style="margin-top:24px">
+        <h3 style="margin:0 0 6px;font-size:16px">Publish New Quiz Session</h3>
+        <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin:0 0 16px">
+          Paste the formatted course and question JSON. A live validation summary will confirm the number of questions.
+        </p>
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px">Session / Week Label</label>
+          <input id="wLabel" placeholder="e.g. Week 3 (26 Oct)">
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px">Course & Question Schema (JSON)</label>
+          <textarea id="wJson" spellcheck="false" placeholder="[ { &quot;title&quot;: &quot;...&quot;, &quot;questions&quot;: [...] } ]"></textarea>
+          <div id="wMsg" style="font-size:12.5px;margin-top:6px" aria-live="polite"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="wCreate">Publish Week</button>
+          <button class="btn btn-sec" id="wTemplate">Load Sample Template</button>
         </div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- Confirmation modal (shared) -->
+<!-- Modal Confirmation -->
 <div id="modalBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalMsg">
   <div class="modal">
-    <p class="modal-msg" id="modalMsg"></p>
-    <p class="modal-sub" id="modalSub"></p>
+    <div class="modal-msg" id="modalMsg"></div>
+    <div class="modal-sub" id="modalSub"></div>
     <div class="modal-acts">
-      <button class="btn sec" id="modalCancel">Cancel</button>
-      <button class="btn del" id="modalConfirm">Delete</button>
+      <button class="btn btn-sec" id="modalCancel">Cancel</button>
+      <button class="btn btn-del" id="modalConfirm">Confirm Delete</button>
     </div>
   </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-let PW = sessionStorage.getItem('adminpw') || '', DATA = { weeks: [], results: [] }, sort = { k: 'at', dir: -1 };
+let PW = sessionStorage.getItem('adminpw') || '',
+    DATA = { weeks: [], results: [] },
+    sort = { k: 'at', dir: -1 };
 
 function el(tag, props, ...kids) {
   const n = document.createElement(tag);
@@ -165,41 +519,57 @@ function el(tag, props, ...kids) {
     else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
     else if (v != null && v !== false) n.setAttribute(k, v);
   }
-  for (const c of kids.flat()) { if (c == null || c === false) continue; n.append(c.nodeType ? c : document.createTextNode(c)); }
+  for (const c of kids.flat()) {
+    if (c == null || c === false) continue;
+    n.append(c.nodeType ? c : document.createTextNode(c));
+  }
   return n;
 }
 
 async function call(method, body) {
   const r = await fetch('/api/admin', {
-    method, headers: { 'Content-Type': 'application/json', 'x-admin-password': PW },
+    method,
+    headers: { 'Content-Type': 'application/json', 'x-admin-password': PW },
     body: body ? JSON.stringify(body) : undefined,
   });
-  let j = {}; try { j = await r.json(); } catch {}
-  if (r.status === 401) { signOut('Wrong password'); throw new Error('Wrong password'); }
-  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+  let j = {};
+  try { j = await r.json(); } catch {}
+  if (r.status === 401) { signOut('Incorrect credentials provided'); throw new Error('Incorrect password'); }
+  if (!r.ok) throw new Error(j.error || 'Server error ' + r.status);
   return j;
 }
 
 function signOut(msg) {
-  sessionStorage.removeItem('adminpw'); PW = '';
-  $('app').classList.add('hidden'); $('login').classList.remove('hidden');
+  sessionStorage.removeItem('adminpw');
+  PW = '';
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
   $('loginErr').textContent = msg || '';
 }
 
 async function load() {
   DATA = await call('GET');
-  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
-  fillFilters(); renderScores(); renderWeeks();
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  fillFilters();
+  renderScores();
+  renderWeeks();
 }
 
-/* ── Login ─────────────────────────────────────────────────────────── */
 $('loginBtn').onclick = async () => {
-  PW = $('pw').value; $('loginErr').textContent = '';
+  PW = $('pw').value;
+  $('loginErr').textContent = '';
   $('loginBtn').disabled = true;
   $('loginBtn').innerHTML = '<span class="spin"></span>Signing in…';
-  try { await load(); sessionStorage.setItem('adminpw', PW); }
-  catch (e) { $('loginErr').textContent = e.message; }
-  finally { $('loginBtn').disabled = false; $('loginBtn').textContent = 'Sign in'; }
+  try {
+    await load();
+    sessionStorage.setItem('adminpw', PW);
+  } catch (e) {
+    $('loginErr').textContent = e.message;
+  } finally {
+    $('loginBtn').disabled = false;
+    $('loginBtn').textContent = 'Sign in';
+  }
 };
 $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
 $('logout').onclick = () => signOut('');
@@ -211,17 +581,15 @@ $('refresh').onclick = async () => {
   finally { $('refresh').disabled = false; $('refresh').textContent = 'Refresh'; }
 };
 
-/* ── Tabs ───────────────────────────────────────────────────────────── */
 $('tScores').onclick = () => tab('scores');
-$('tWeeks').onclick  = () => tab('weeks');
+$('tWeeks').onclick = () => tab('weeks');
 function tab(t) {
   $('scores').classList.toggle('hidden', t !== 'scores');
-  $('weeks').classList.toggle('hidden',  t !== 'weeks');
+  $('weeks').classList.toggle('hidden', t !== 'weeks');
   $('tScores').setAttribute('aria-selected', t === 'scores');
-  $('tWeeks').setAttribute('aria-selected',  t === 'weeks');
+  $('tWeeks').setAttribute('aria-selected', t === 'weeks');
 }
 
-/* ── Custom confirmation modal ──────────────────────────────────────── */
 let _modalResolve;
 function confirm_(title, sub) {
   return new Promise(resolve => {
@@ -232,163 +600,279 @@ function confirm_(title, sub) {
     $('modalConfirm').focus();
   });
 }
-$('modalCancel').onclick  = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(false); };
+$('modalCancel').onclick = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(false); };
 $('modalConfirm').onclick = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(true); };
-$('modalBackdrop').addEventListener('keydown', e => { if (e.key === 'Escape') $('modalCancel').click(); });
-$('modalBackdrop').addEventListener('click', e => { if (e.target === $('modalBackdrop')) $('modalCancel').click(); });
 
-/* ── Scores ─────────────────────────────────────────────────────────── */
 function fillFilters() {
   const cur = $('fWeek').value;
-  $('fWeek').replaceChildren(el('option', { value: '' }, 'All weeks'), ...DATA.weeks.map(w => el('option', { value: w.id }, w.label + (w.open === false ? ' (closed)' : ''))));
+  $('fWeek').replaceChildren(
+    el('option', { value: '' }, 'All Sessions'),
+    ...DATA.weeks.map(w => el('option', { value: w.id }, w.label + (w.open === false ? ' (Archived)' : '')))
+  );
   $('fWeek').value = DATA.weeks.some(w => w.id === cur) ? cur : '';
   fillCourses();
 }
+
 function fillCourses() {
   const wk = $('fWeek').value, cur = $('fCourse').value, seen = new Map();
   DATA.weeks.filter(w => !wk || w.id === wk).forEach(w => w.courses.forEach(c => seen.set(c.id, c.title)));
-  $('fCourse').replaceChildren(el('option', { value: '' }, 'All quizzes'), ...[...seen].map(([id, t]) => el('option', { value: id }, t)));
+  $('fCourse').replaceChildren(
+    el('option', { value: '' }, 'All Courses'),
+    ...[...seen].map(([id, t]) => el('option', { value: id }, t))
+  );
   $('fCourse').value = seen.has(cur) ? cur : '';
 }
+
 $('fWeek').onchange = () => { fillCourses(); renderScores(); };
 ['fCourse', 'fMode'].forEach(i => $(i).onchange = renderScores);
 $('fSearch').oninput = renderScores;
 
-const COLS = [['name','Name'],['courseTitle','Quiz'],['weekLabel','Week'],['score','Score'],['percent','%'],['seconds','Time'],['attempt','Attempt'],['at','Date']];
+const COLS = [
+  ['name', 'Candidate'],
+  ['courseTitle', 'Course Module'],
+  ['weekLabel', 'Session'],
+  ['score', 'Score'],
+  ['percent', 'Percent'],
+  ['seconds', 'Duration'],
+  ['attempt', 'Attempt'],
+  ['at', 'Timestamp']
+];
+
 function filtered() {
-  const wk = $('fWeek').value, co = $('fCourse').value, q = $('fSearch').value.trim().toLowerCase(), mode = $('fMode').value;
-  let rows = DATA.results.filter(r => (!wk || r.week === wk) && (!co || r.course === co) && (!q || (r.name + ' ' + (r.contact || '')).toLowerCase().includes(q)));
+  const wk = $('fWeek').value,
+        co = $('fCourse').value,
+        q = $('fSearch').value.trim().toLowerCase(),
+        mode = $('fMode').value;
+
+  let rows = DATA.results.filter(r =>
+    (!wk || r.week === wk) &&
+    (!co || r.course === co) &&
+    (!q || (r.name + ' ' + (r.contact || '')).toLowerCase().includes(q))
+  );
+
   if (mode === 'first') rows = rows.filter(r => r.attempt === 1);
   if (mode === 'best') {
     const best = new Map();
-    rows.forEach(r => { const k = [r.week, r.course, r.name.toLowerCase()].join('|'); const b = best.get(k); if (!b || r.score > b.score || (r.score === b.score && r.seconds < b.seconds)) best.set(k, r); });
+    rows.forEach(r => {
+      const k = [r.week, r.course, r.name.toLowerCase()].join('|');
+      const b = best.get(k);
+      if (!b || r.score > b.score || (r.score === b.score && r.seconds < b.seconds)) best.set(k, r);
+    });
     rows = [...best.values()];
   }
+
   const k = sort.k, d = sort.dir;
   return rows.sort((a, b) => (typeof a[k] === 'string' ? a[k].localeCompare(b[k]) : a[k] - b[k]) * d);
 }
+
 const fmtTime = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
 const fmtDate = t => new Date(t).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
 function renderScores() {
   const rows = filtered();
-  $('thead').replaceChildren(...COLS.map(([k, l]) => el('th', {
-    onclick: () => { sort = { k, dir: sort.k === k ? -sort.dir : (k === 'name' || k === 'courseTitle' || k === 'weekLabel' ? 1 : -1) }; renderScores(); },
-    'aria-sort': sort.k === k ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none',
-  }, l + (sort.k === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''))), el('th', {}, ''));
+  $('thead').replaceChildren(
+    ...COLS.map(([k, l]) => el('th', {
+      onclick: () => {
+        sort = { k, dir: sort.k === k ? -sort.dir : (k === 'name' || k === 'courseTitle' || k === 'weekLabel' ? 1 : -1) };
+        renderScores();
+      },
+      'aria-sort': sort.k === k ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none',
+    }, l + (sort.k === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''))),
+    el('th', {}, '')
+  );
+
   $('tbody').replaceChildren(...(rows.length ? rows.map(r => el('tr', {},
-    el('td', {}, r.name, r.contact ? el('small', {}, r.contact) : null),
-    el('td', {}, r.courseTitle), el('td', {}, r.weekLabel),
-    el('td', {}, r.score + ' / ' + r.total),
+    el('td', {},
+      el('span', { style: 'font-weight:600' }, r.name),
+      r.contact ? el('small', {}, r.contact) : null),
+    el('td', {}, r.courseTitle),
+    el('td', {}, r.weekLabel),
+    el('td', { style: 'font-family:JetBrains Mono,monospace' }, r.score + ' / ' + r.total),
     el('td', {}, el('span', { class: 'pill ' + (r.percent >= 70 ? 'hi' : r.percent >= 50 ? 'mid' : 'lo') }, r.percent + '%')),
-    el('td', {}, fmtTime(r.seconds)), el('td', {}, '#' + r.attempt), el('td', {}, fmtDate(r.at)),
+    el('td', { style: 'font-family:JetBrains Mono,monospace;color:var(--text-muted)' }, fmtTime(r.seconds)),
+    el('td', { style: 'color:var(--text-faint);font-family:JetBrains Mono,monospace' }, '#' + r.attempt),
+    el('td', { style: 'color:var(--text-faint);font-size:12px' }, fmtDate(r.at)),
     el('td', {}, el('button', {
-      class: 'btn del',
-      'aria-label': 'Delete attempt by ' + r.name,
+      class: 'btn-del',
+      'aria-label': 'Delete submission from ' + r.name,
       onclick: async function () {
-        const ok = await confirm_('Delete this attempt?', 'By ' + r.name + ' — this cannot be undone.');
+        const ok = await confirm_('Delete this assessment record?', 'Candidate: ' + r.name + ' — this action is permanent.');
         if (!ok) return;
         this.disabled = true; this.innerHTML = '<span class="spin"></span>';
-        try { await call('POST', { action: 'deleteResult', id: r.id }); await load(); }
-        catch (e) { alert(e.message); this.disabled = false; this.textContent = 'Delete'; }
-      },
-    }, 'Delete'))))
-    : [el('tr', {}, el('td', { colspan: 9, class: 'empty' }, 'No attempts yet'))]));
+        try {
+          await call('POST', { action: 'deleteResult', id: r.id });
+          await load();
+        } catch (e) {
+          alert(e.message);
+          this.disabled = false;
+          this.textContent = 'Delete';
+        }
+      }
+    }, 'Delete'))
+  )) : [el('tr', {}, el('td', { colspan: 9, style: 'text-align:center;padding:40px;color:var(--text-faint)' }, 'No matching examination records found.'))]));
+
   const people = new Set(rows.map(r => r.name.toLowerCase()));
-  $('sAttempts').textContent = rows.length; $('sPeople').textContent = people.size;
+  $('sAttempts').textContent = rows.length;
+  $('sPeople').textContent = people.size;
   $('sAvg').textContent = rows.length ? Math.round(rows.reduce((a, r) => a + r.percent, 0) / rows.length) + '%' : '0%';
-  $('count').textContent = rows.length + ' result' + (rows.length === 1 ? '' : 's') + ' shown';
+  $('count').textContent = rows.length + ' record' + (rows.length === 1 ? '' : 's') + ' displayed';
 }
 
 $('csv').onclick = () => {
   const esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-  const head = ['Name','Contact','Quiz','Week','Score','Total','Percent','Seconds','Attempt','Date'];
-  const lines = [head.map(esc).join(',')].concat(filtered().map(r => [r.name, r.contact, r.courseTitle, r.weekLabel, r.score, r.total, r.percent, r.seconds, r.attempt, new Date(r.at).toISOString()].map(esc).join(',')));
-  const a = el('a', { href: URL.createObjectURL(new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' })), download: 'quiz-scores.csv' });
+  const head = ['Candidate', 'Matric_Contact', 'Course', 'Session', 'Score', 'Total', 'Percent', 'Seconds', 'Attempt', 'ISO_Timestamp'];
+  const lines = [head.map(esc).join(',')].concat(filtered().map(r => [
+    r.name, r.contact, r.courseTitle, r.weekLabel, r.score, r.total, r.percent, r.seconds, r.attempt, new Date(r.at).toISOString()
+  ].map(esc).join(',')));
+  const a = el('a', {
+    href: URL.createObjectURL(new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' })),
+    download: 'academic-quiz-records.csv'
+  });
   document.body.append(a); a.click(); a.remove();
 };
 
-/* ── Weeks ──────────────────────────────────────────────────────────── */
 function renderWeeks() {
   $('weekList').replaceChildren(...DATA.weeks.map((w, i) => {
     const n = DATA.results.filter(r => r.week === w.id).length;
-    // Inline edit label UI
     let editOpen = false;
-    const editRow = el('div', { class: 'edit-label-form hidden' });
-    const editInput = el('input', { type: 'text', value: w.label, 'aria-label': 'New week label', style: 'flex:1' });
-    const editSaveBtn = el('button', { class: 'btn', style: 'white-space:nowrap', onclick: async () => {
-      const newLabel = editInput.value.trim();
-      if (!newLabel || newLabel === w.label) { editRow.classList.add('hidden'); editOpen = false; return; }
-      editSaveBtn.disabled = true; editSaveBtn.innerHTML = '<span class="spin"></span>Saving…';
-      try { await call('POST', { action: 'editWeek', week: w.id, label: newLabel }); await load(); }
-      catch (e) { alert(e.message); editSaveBtn.disabled = false; editSaveBtn.textContent = 'Save'; }
-    } }, 'Save');
-    editRow.append(editInput, editSaveBtn, el('button', { class: 'btn sec', onclick: () => { editRow.classList.add('hidden'); editOpen = false; } }, 'Cancel'));
 
-    const card = el('div', { class: 'card' },
-      el('h3', {}, w.label + (i === 0 ? '  (current)' : '') + (w.open === false ? '  (closed)' : '')),
-      el('div', { class: 'meta' }, w.courses.map(c => c.title + ' (' + c.count + ')').join(' · ') + ' — ' + n + ' attempt' + (n === 1 ? '' : 's')),
+    const editRow = el('div', { class: 'edit-row hidden' });
+    const editInput = el('input', { type: 'text', value: w.label, 'aria-label': 'Rename session' });
+    const editSaveBtn = el('button', {
+      class: 'btn',
+      onclick: async () => {
+        const newLabel = editInput.value.trim();
+        if (!newLabel || newLabel === w.label) { editRow.classList.add('hidden'); editOpen = false; return; }
+        editSaveBtn.disabled = true; editSaveBtn.innerHTML = '<span class="spin"></span>Saving…';
+        try {
+          await call('POST', { action: 'editWeek', week: w.id, label: newLabel });
+          await load();
+        } catch (e) {
+          alert(e.message);
+          editSaveBtn.disabled = false;
+          editSaveBtn.textContent = 'Save';
+        }
+      }
+    }, 'Save');
+
+    editRow.append(editInput, editSaveBtn, el('button', {
+      class: 'btn btn-sec',
+      onclick: () => { editRow.classList.add('hidden'); editOpen = false; }
+    }, 'Cancel'));
+
+    return el('div', { class: 'week-card' },
+      el('div', { class: 'week-card-head' },
+        el('div', { class: 'week-title' },
+          w.label,
+          i === 0 ? el('span', { class: 'badge-state current' }, 'Active Session') : null,
+          w.open === false ? el('span', { class: 'badge-state closed' }, 'Archived') : null),
+        el('span', { style: 'font-size:12.5px;color:var(--text-faint)' }, n + ' submission' + (n === 1 ? '' : 's'))),
+      el('div', { class: 'week-courses' },
+        w.courses.map(c => c.title + ' (' + c.count + ' questions)').join(' · ')),
       editRow,
-      el('div', { class: 'acts' },
-        el('button', { class: 'btn sec', onclick: async function () {
-          this.disabled = true; this.innerHTML = '<span class="spin"></span>Saving…';
-          try { await call('POST', { action: 'setOpen', week: w.id, open: w.open === false }); await load(); }
-          catch (e) { alert(e.message); this.disabled = false; this.textContent = w.open === false ? 'Reopen for students' : 'Close for students'; }
-        } }, w.open === false ? 'Reopen for students' : 'Close for students'),
-        el('button', { class: 'btn sec', onclick: () => {
-          editOpen = !editOpen; editRow.classList.toggle('hidden', !editOpen);
-          if (editOpen) { editInput.value = w.label; editInput.focus(); editInput.select(); }
-        } }, 'Edit label'),
+      el('div', { class: 'week-acts' },
         el('button', {
-          class: 'btn del',
-          'aria-label': 'Delete week ' + w.label,
+          class: 'btn btn-sec',
           onclick: async function () {
-            const ok = await confirm_('Delete "' + w.label + '"?', 'Questions will be removed. Past scores are kept.');
+            this.disabled = true; this.innerHTML = '<span class="spin"></span>Updating…';
+            try {
+              await call('POST', { action: 'setOpen', week: w.id, open: w.open === false });
+              await load();
+            } catch (e) {
+              alert(e.message);
+              this.disabled = false;
+              this.textContent = w.open === false ? 'Unarchive Module' : 'Archive Module';
+            }
+          }
+        }, w.open === false ? 'Unarchive Module' : 'Archive Module'),
+        el('button', {
+          class: 'btn btn-sec',
+          onclick: () => {
+            editOpen = !editOpen;
+            editRow.classList.toggle('hidden', !editOpen);
+            if (editOpen) { editInput.value = w.label; editInput.focus(); editInput.select(); }
+          }
+        }, 'Rename Session'),
+        el('button', {
+          class: 'btn-del',
+          onclick: async function () {
+            const ok = await confirm_('Delete session "' + w.label + '"?', 'Assessment questions will be permanently deleted. Past candidate scores are preserved.');
             if (!ok) return;
             this.disabled = true; this.innerHTML = '<span class="spin"></span>';
-            try { await call('POST', { action: 'deleteWeek', week: w.id }); await load(); }
-            catch (e) { alert(e.message); this.disabled = false; this.textContent = 'Delete week'; }
-          },
-        }, 'Delete week')));
-    return card;
+            try {
+              await call('POST', { action: 'deleteWeek', week: w.id });
+              await load();
+            } catch (e) {
+              alert(e.message);
+              this.disabled = false;
+              this.textContent = 'Delete Week';
+            }
+          }
+        }, 'Delete Week')));
   }));
 }
 
-/* ── JSON live preview ───────────────────────────────────────────────── */
 $('wJson').addEventListener('input', () => {
   const msg = $('wMsg'), val = $('wJson').value.trim();
-  if (!val) { msg.className = ''; msg.textContent = ''; return; }
+  if (!val) { msg.textContent = ''; return; }
   try {
     const courses = JSON.parse(val);
-    if (!Array.isArray(courses)) { msg.className = 'err'; msg.textContent = '✕ JSON must be an array […]'; return; }
+    if (!Array.isArray(courses)) {
+      msg.style.color = 'var(--bad)';
+      msg.textContent = 'Invalid schema: Top level must be a JSON array [ … ]';
+      return;
+    }
     const qCount = courses.reduce((a, c) => a + (Array.isArray(c.questions) ? c.questions.length : 0), 0);
-    msg.className = 'ok';
-    msg.textContent = '✓ ' + courses.length + ' course' + (courses.length === 1 ? '' : 's') + ', ' + qCount + ' question' + (qCount === 1 ? '' : 's') + ' total';
+    msg.style.color = 'var(--good)';
+    msg.textContent = '✓ Verified format: ' + courses.length + ' course module(s), ' + qCount + ' question(s) parsed.';
   } catch (e) {
-    msg.className = 'err'; msg.textContent = '✕ ' + e.message;
+    msg.style.color = 'var(--bad)';
+    msg.textContent = 'Syntax error: ' + e.message;
   }
 });
 
 $('wTemplate').onclick = () => {
-  $('wJson').value = JSON.stringify([{ title: 'Introduction to Marketing', code: 'MKT101', timePerQ: 30, questions: [
-    { q: 'What does the first P in the 4Ps of marketing stand for?', opts: ['Product','Profit','People','Paper'], ans: 'Product', why: 'The 4Ps are product, price, place and promotion.' },
-    { q: 'Which P covers advertising and sales offers?', opts: ['Promotion','Price','Place','Product'], ans: 'Promotion', why: 'Promotion is how a business communicates with customers.' }] }], null, 2);
-  // Trigger live preview
+  $('wJson').value = JSON.stringify([{
+    title: 'Business Information Systems',
+    code: 'BIS201',
+    timePerQ: 30,
+    questions: [
+      {
+        q: 'What represents the core distinction between data and information?',
+        opts: ['Information is processed data with context', 'Data is qualitative whereas information is always quantitative', 'They are synonymous in enterprise architectures', 'Data requires relational schemas'],
+        ans: 'Information is processed data with context',
+        why: 'Data represents raw facts; once structured, formatted, and contextualised, it becomes information.'
+      }
+    ]
+  }], null, 2);
   $('wJson').dispatchEvent(new Event('input'));
 };
 
 $('wCreate').onclick = async () => {
-  const msg = $('wMsg'); msg.className = ''; msg.textContent = '';
+  const msg = $('wMsg');
   const label = $('wLabel').value.trim();
-  let courses; try { courses = JSON.parse($('wJson').value); } catch { msg.className = 'err'; msg.textContent = 'That is not valid JSON. Paste exactly what Claude gave you.'; return; }
-  $('wCreate').disabled = true; $('wCreate').innerHTML = '<span class="spin"></span>Publishing…';
+  let courses;
+  try { courses = JSON.parse($('wJson').value); } catch {
+    msg.style.color = 'var(--bad)';
+    msg.textContent = 'Please enter valid JSON before publishing.';
+    return;
+  }
+  $('wCreate').disabled = true;
+  $('wCreate').innerHTML = '<span class="spin"></span>Publishing…';
   try {
     await call('POST', { action: 'createWeek', label, courses });
-    msg.className = 'ok'; msg.textContent = 'Published. It is now the current week.';
-    $('wLabel').value = ''; $('wJson').value = ''; await load();
+    msg.style.color = 'var(--good)';
+    msg.textContent = '✓ Session published successfully.';
+    $('wLabel').value = '';
+    $('wJson').value = '';
+    await load();
+  } catch (e) {
+    msg.style.color = 'var(--bad)';
+    msg.textContent = e.message;
+  } finally {
+    $('wCreate').disabled = false;
+    $('wCreate').textContent = 'Publish Week';
   }
-  catch (e) { msg.className = 'err'; msg.textContent = e.message; }
-  $('wCreate').disabled = false; $('wCreate').textContent = 'Publish week';
 };
 
 if (PW) load().catch(() => signOut(''));

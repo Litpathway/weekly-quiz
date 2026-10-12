@@ -3,339 +3,976 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#6b4cff">
-<meta name="description" content="Take your weekly course quiz, get instant feedback, and see your score.">
-<meta property="og:title" content="Weekly Quiz">
-<meta property="og:description" content="Take your weekly course quiz and see your results instantly.">
+<meta name="theme-color" content="#18181b">
+<meta name="description" content="Weekly course assessments, clean revision, and instant verifiable results.">
+<meta property="og:title" content="Weekly Quiz — Student Portal">
+<meta property="og:description" content="Take weekly academic quizzes, get instant grading, and review verified solutions.">
 <meta property="og:type" content="website">
 <title>Weekly Quiz</title>
-<!-- Inline critical font-face so the first paint isn't blocked by a network round-trip -->
+
+<!-- High quality typography: Inter & JetBrains Mono -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-<!-- PWA -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet"></noscript>
+
 <link rel="manifest" href="/manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%236b4cff'/><path fill='%23fff' d='M11 9a4 4 0 0 1 8 0v2h5a1 1 0 0 1 1 1v5h-2a4 4 0 0 0 0 8h2v5a1 1 0 0 1-1 1h-5v-2a4 4 0 0 0-8 0v2H6a1 1 0 0 1-1-1v-5h2a4 4 0 0 0 0-8H5v-5a1 1 0 0 1 1-1h5z'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2318181b'/><text x='16' y='21' font-family='sans-serif' font-weight='800' font-size='15' fill='%23fafafa' text-anchor='middle'>Q</text></svg>">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Quiz">
+
 <style>
-:root{--purple:#6b4cff;--bg:#18181a;--panel:#262628;--line:#3b3b40;--card:#2a1f70;--orange:#ff7a14;--muted:#a8a6bd;--good:#45c26d;--bad:#ff5a4f}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:#0e0e10;color:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button,input{font:inherit;color:inherit}
-button{cursor:pointer;border:none;background:none}
-:focus-visible{outline:3px solid #fff;outline-offset:2px}
-.app{max-width:430px;min-height:100vh;min-height:100dvh;margin:0 auto;position:relative;overflow:hidden;background:linear-gradient(#1c1c1f,#141416)}
-.hero{position:absolute;left:0;right:0;top:0;height:270px;background:var(--purple);clip-path:polygon(0 0,100% 0,100% 100%,50% 88%,0 100%)}
-main{position:relative;padding:22px 24px calc(110px + env(safe-area-inset-bottom))}
-.hidden{display:none!important}
+:root {
+  --bg: #09090b;
+  --panel: #121215;
+  --surface: #18181b;
+  --surface-hover: #212126;
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  --border-active: #52525b;
+  
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-faint: #71717a;
+  
+  --primary: #fafafa;
+  --primary-fg: #09090b;
+  --accent: #3b82f6;
+  --good: #10b981;
+  --good-bg: rgba(16, 185, 129, 0.1);
+  --bad: #ef4444;
+  --bad-bg: rgba(239, 68, 68, 0.1);
+  --warn: #f59e0b;
 
-/* Screen fade */
-@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-main>*{animation:fadein .15s ease both}
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
 
-/* top bar */
-.top{display:flex;align-items:center;gap:12px}
-.chip{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:10px;font-weight:600;font-size:13px;white-space:nowrap}
-.chip.dark{background:#111}.chip.org{background:var(--orange);color:#111}
-.chip svg{width:16px;height:16px}
-.bar{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.3);overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--orange);border-radius:8px;transition:width .3s}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
 
-/* question card */
-.qcard{position:relative;margin-top:62px;background:var(--card);border-radius:22px;padding:56px 18px 24px;text-align:center}
-.timer{position:absolute;left:50%;top:-44px;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:#171717;border:6px solid var(--purple);display:grid;place-items:center}
-.timer svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
-.timer circle{fill:none;stroke-width:5;stroke-linecap:round}
-.timer .bg{stroke:#2e2e33}.timer .fg{stroke:var(--orange);stroke-dasharray:201;stroke-dashoffset:0;transition:stroke .3s}
-.timer b{position:relative;font-size:24px;font-weight:700;transition:color .3s}
-/* Warning state: timer turns red when ≤ 5 s remain */
-.timer.warn .fg{stroke:var(--bad)}
-.timer.warn b{color:var(--bad)}
-.qcard h2{margin:0;font-size:22px;font-weight:600}
-.qcard h2 span{color:var(--orange)}
-.sub{color:#8f8cb3;font-size:14px;margin:12px 0 0;padding-bottom:14px;border-bottom:1px dashed rgba(255,255,255,.25)}
-.qtext{margin:16px 0 0;font-size:18px;font-weight:600;line-height:1.4}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* options */
-.opts{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
-.opt{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 18px;font-size:15px;font-weight:500;min-height:62px}
-.opt .c{flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid #55555b;display:grid;place-items:center}
-.opt .c svg{width:16px;height:16px;opacity:0}
-.opt[aria-pressed=true]{border-color:var(--orange);color:var(--orange);background:#2d231c}
-.opt[aria-pressed=true] .c{background:var(--orange);border-color:var(--orange);color:#111}
-.opt[aria-pressed=true] .c svg{opacity:1}
-/* Keyboard shortcut hint badge */
-.opt .kbd{flex:none;font-size:11px;font-weight:700;color:var(--muted);background:#1f1f22;border:1px solid #3b3b40;border-radius:6px;padding:2px 6px;min-width:22px;text-align:center}
+/* Desktop-adaptive layout container */
+.shell {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 32px 20px calc(96px + env(safe-area-inset-bottom));
+}
 
-/* buttons */
-.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;padding:14px 24px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#141416 38%)}
-.btn{display:block;width:100%;background:var(--orange);color:#fff;font-weight:600;font-size:16px;border-radius:999px;padding:17px;text-align:center}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.ghost{background:transparent;border:1.5px solid var(--line);color:#fff;margin-top:12px}
+@media (min-width: 768px) {
+  .shell {
+    max-width: 720px;
+    padding: 48px 32px 100px;
+  }
+}
 
-/* home */
-.hello{padding:10px 0 0}
-.hello p{margin:0;color:#e3dcff;font-size:14px}
-.hello h1{margin:4px 0 0;font-size:30px;line-height:1.15;font-weight:700}
-.sec{margin:70px 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.sec.first{margin-top:46px}
-.weekcard{background:var(--card);border-radius:20px;padding:16px 14px 6px;margin-bottom:14px}
-.weekcard h3{margin:0 0 12px 4px;font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
-.tag{font-size:11px;background:var(--orange);color:#111;padding:3px 9px;border-radius:99px;font-weight:700}
-.row{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
-.dot{flex:none;width:12px;height:36px;border-radius:6px}
-.row .t{flex:1;min-width:0}.row .t b{display:block;font-size:14.5px;font-weight:600;line-height:1.3}
-.row .t small{color:var(--muted);font-size:12.5px}
-.row svg{flex:none;width:18px;height:18px;color:var(--muted)}
-details.past{margin-bottom:12px;background:#222226;border-radius:16px;border:1px solid var(--line)}
-details.past summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
-details.past summary::-webkit-details-marker{display:none}
-details.past summary small{color:var(--muted);font-weight:400}
-details.past .in{padding:0 12px 4px}
-.msg{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--muted);text-align:center}
-.err{color:var(--bad)}
+/* Header bar */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 32px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+}
+.brand-badge {
+  width: 24px;
+  height: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-pill {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--good);
+  border-radius: 50%;
+}
 
-/* Skeleton loader */
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.skel{border-radius:12px;background:linear-gradient(90deg,#282830 25%,#33333d 50%,#282830 75%);background-size:200% 100%;animation:shimmer 1.4s ease-in-out infinite}
-.sk-h1{height:28px;width:70%;margin-bottom:12px;border-radius:8px}
-.sk-sub{height:14px;width:40%;margin-bottom:32px;border-radius:6px}
-.sk-row{height:80px;margin-bottom:12px;border-radius:16px}
+main { position: relative; }
+.hidden { display: none !important; }
 
-/* form */
-.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;padding:6px 0}
-.back svg{width:18px;height:18px}
-.formcard{margin-top:70px;background:var(--card);border-radius:22px;padding:24px 18px}
-.formcard h2{margin:0;font-size:21px}
-.formcard p{margin:6px 0 18px;color:#c9c5ee;font-size:14px}
-label{display:block;font-size:13px;font-weight:500;color:#d8d4f5;margin:14px 0 6px}
-input{width:100%;background:#181826;border:1px solid #4a4290;border-radius:14px;padding:14px;font-size:16px}
-input:focus{border-color:var(--orange);outline:none}
-.note{font-size:12.5px;color:#a9a5d6;margin-top:16px}
+/* Micro-animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+main > * { animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-/* results */
-.rcard{margin-top:56px;background:var(--card);border-radius:22px;padding:60px 18px 24px;text-align:center;position:relative}
-.rring{position:absolute;left:50%;top:-52px;transform:translateX(-50%);width:104px;height:104px;border-radius:50%;background:#171717;border:6px solid var(--purple);display:grid;place-items:center}
-.rring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
-.rring circle{fill:none;stroke-width:6;stroke-linecap:round}
-.rring .bg{stroke:#2e2e33}.rring .fg{stroke:var(--orange)}
-.rring b{position:relative;font-size:24px}
-.rcard h2{margin:0;font-size:22px}
-.rcard .big{font-size:42px;font-weight:700;margin:6px 0 0;line-height:1.1}
-.rcard .big small{font-size:20px;color:#a9a5d6;font-weight:500}
-.rcard p{color:#cfcaf5;margin:10px 0 0;font-size:14px}
-.sent{margin-top:16px;font-size:12.5px;color:#8f8cb3}
-.revh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 12px}
-.revh h3{margin:0;font-size:17px}
-.sw{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
-.rev{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
-.rev .n{font-size:12px;color:var(--muted);font-weight:600}
-.rev .q{margin:4px 0 10px;font-weight:600;font-size:14.5px;line-height:1.4}
-.rev .a{font-size:13.5px;margin:4px 0;display:flex;gap:8px}
-.rev .a i{flex:none;font-style:normal;font-weight:700}
-.rev .ok{color:var(--good)}.rev .no{color:var(--bad)}
-.rev .why{margin:10px 0 0;font-size:13px;color:var(--muted);padding-top:10px;border-top:1px dashed var(--line)}
+/* Academic minimal cards */
+.block {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  transition: border-color 0.15s ease;
+}
 
-/* Toast notification */
-.toast-host{position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:50;width:calc(100% - 48px);max-width:382px;pointer-events:none}
-.toast{background:#2a1212;border:1px solid #7a2020;border-radius:14px;padding:12px 16px;font-size:13.5px;color:#ffaaaa;pointer-events:auto;animation:fadein .2s ease}
+.intro h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.intro p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
 
-@media (prefers-reduced-motion:reduce){.bar i,main>*,.timer .fg,.timer b,.toast{transition:none;animation:none}.skel{animation:none;background:#282830}}
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin: 32px 0 14px;
+}
+
+/* Quiz Item Rows */
+.quiz-list { display: flex; flex-direction: column; gap: 10px; }
+.quiz-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  transition: all 0.15s ease;
+}
+.quiz-row:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-active);
+  transform: translateY(-1px);
+}
+.quiz-info { flex: 1; min-width: 0; }
+.quiz-title {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.quiz-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.code-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: #27272a;
+  color: var(--text-main);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.quiz-arrow {
+  color: var(--text-faint);
+  transition: transform 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+.quiz-row:hover .quiz-arrow {
+  transform: translateX(3px);
+  color: var(--text-main);
+}
+
+/* Accordion Past Weeks */
+details.history-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+details.history-box summary {
+  list-style: none;
+  padding: 16px 18px;
+  font-size: 14.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  background: var(--panel);
+  transition: background 0.15s ease;
+}
+details.history-box summary::-webkit-details-marker { display: none; }
+details.history-box summary:hover { background: var(--surface); }
+details.history-box summary .sum-meta { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+details.history-box .history-content {
+  padding: 8px 14px 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Skeleton Loading State */
+@keyframes shimmer {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+.skel {
+  background: #1f1f23;
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Form Styles */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+.back-btn:hover { color: var(--text-main); }
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 14px;
+  font-size: 14.5px;
+  color: var(--text-main);
+  transition: border-color 0.15s ease;
+}
+.field input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.field input::placeholder { color: var(--text-faint); }
+.guidance-box {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.guidance-box b { color: var(--text-main); font-weight: 600; }
+
+/* Active Quiz Interface */
+.exam-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.track-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--surface);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+.track-fill {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.exam-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Question Workspace */
+.question-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.q-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+.timer-pill.urgent {
+  background: var(--bad-bg);
+  border-color: var(--bad);
+  color: var(--bad);
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.question-text {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-main);
+  letter-spacing: -0.015em;
+  margin: 0 0 28px;
+}
+
+/* Question Options */
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.option-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-main);
+  transition: all 0.15s ease;
+}
+.option-btn:hover {
+  background: var(--surface);
+  border-color: var(--border-active);
+}
+.option-btn[aria-pressed="true"] {
+  background: #1c2230;
+  border-color: var(--accent);
+  color: #fff;
+}
+.key-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.option-btn[aria-pressed="true"] .key-badge {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.option-label { flex: 1; line-height: 1.4; }
+
+/* Bottom Action Dock */
+.action-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 80%, transparent);
+  display: flex;
+  justify-content: center;
+  z-index: 40;
+}
+.dock-inner {
+  width: 100%;
+  max-width: 640px;
+}
+.btn-primary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--primary);
+  color: var(--primary-fg);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  padding: 15px;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.btn-primary:active { transform: scale(0.99); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-secondary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14.5px;
+  border-radius: var(--radius-md);
+  padding: 13px;
+  margin-top: 10px;
+  transition: background 0.15s ease;
+}
+.btn-secondary:hover { background: var(--surface); }
+
+/* Results & Review Screen */
+.score-card {
+  text-align: center;
+  padding: 40px 24px;
+}
+.score-circle {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-circle .pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.score-fraction {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+.score-headline {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.score-sub {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  margin: 0 0 20px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 36px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.review-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+.toggle-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.rev-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.rev-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.rev-index {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.rev-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.rev-badge.ok { background: var(--good-bg); color: var(--good); }
+.rev-badge.no { background: var(--bad-bg); color: var(--bad); }
+
+.rev-q {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 14px;
+  color: var(--text-main);
+}
+.rev-answer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+.rev-answer-row strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+.rev-answer-row.correct { color: var(--good); }
+.rev-answer-row.wrong { color: var(--bad); }
+
+.rev-why {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: 13px;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+/* Toast */
+.toast-host {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  pointer-events: none;
+}
+.toast {
+  background: #18181b;
+  border: 1px solid var(--border-active);
+  color: var(--text-main);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  animation: fadeIn 0.2s ease;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="hero" aria-hidden="true"></div>
-  <main id="view" aria-label="Quiz" aria-live="polite"></main>
+
+<div class="shell">
+  <nav class="site-nav" aria-label="Global header">
+    <div class="brand">
+      <span class="brand-badge">Q</span>
+      <span>Weekly Quiz</span>
+    </div>
+    <div class="status-pill">
+      <span class="status-dot"></span>
+      <span>Live Assessments</span>
+    </div>
+  </nav>
+
+  <main id="view" aria-label="Quiz Content" aria-live="polite"></main>
 </div>
-<div class="dock hidden" id="dock"><button class="btn" id="dockBtn"></button></div>
+
+<div class="action-dock hidden" id="dock">
+  <div class="dock-inner">
+    <button class="btn-primary" id="dockBtn">Continue</button>
+  </div>
+</div>
+
 <div class="toast-host hidden" id="toastHost" role="status" aria-live="assertive" aria-atomic="true"></div>
 
 <script>
-const ICON = {
-  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
-  puzzle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4a2 2 0 1 1 4 0v2h4a1 1 0 0 1 1 1v4h-2a2 2 0 1 0 0 4h2v4a1 1 0 0 1-1 1h-4v-2a2 2 0 1 0-4 0v2H6a1 1 0 0 1-1-1v-4H3v-4h2V7a1 1 0 0 1 1-1h4z"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
-  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
-  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>'
-};
-const $view = document.getElementById('view'), $dock = document.getElementById('dock'), $dockBtn = document.getElementById('dockBtn');
-const $toastHost = document.getElementById('toastHost');
+const $view = document.getElementById('view'),
+      $dock = document.getElementById('dock'),
+      $dockBtn = document.getElementById('dockBtn'),
+      $toastHost = document.getElementById('toastHost');
+
 const pad = n => String(n).padStart(2, '0');
 
 function el(tag, props, ...kids) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(props || {})) {
     if (k === 'class') n.className = v;
-    else if (k === 'icon') n.innerHTML = v;
     else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
     else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
   }
-  for (const c of kids.flat()) { if (c == null || c === false) continue; n.append(c.nodeType ? c : document.createTextNode(c)); }
+  for (const c of kids.flat()) {
+    if (c == null || c === false) continue;
+    n.append(c.nodeType ? c : document.createTextNode(c));
+  }
   return n;
 }
-const svgIcon = html => { const s = el('span', { icon: html }); return s.firstChild; };
-function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 async function api(path, opts) {
   const r = await fetch(path, opts);
-  let j = {}; try { j = await r.json(); } catch {}
-  if (!r.ok) throw new Error(j.error || 'Something went wrong (' + r.status + ')');
+  let j = {};
+  try { j = await r.json(); } catch {}
+  if (!r.ok) throw new Error(j.error || 'Request failed (' + r.status + ')');
   return j;
 }
-function mount(...nodes) { $view.replaceChildren(...nodes); window.scrollTo(0, 0); }
-function dock(label, fn, disabled) { $dock.classList.remove('hidden'); $dockBtn.textContent = label; $dockBtn.disabled = !!disabled; $dockBtn.onclick = fn; }
-function undock() { $dock.classList.add('hidden'); }
 
-/* ── Toast ──────────────────────────────────────────────────────────── */
+function mount(...nodes) {
+  $view.replaceChildren(...nodes);
+  window.scrollTo(0, 0);
+}
+
+function dock(label, fn, disabled) {
+  $dock.classList.remove('hidden');
+  $dockBtn.textContent = label;
+  $dockBtn.disabled = !!disabled;
+  $dockBtn.onclick = fn;
+}
+
+function undock() {
+  $dock.classList.add('hidden');
+}
+
 let _toastTimer;
 function showToast(msg) {
   $toastHost.classList.remove('hidden');
   $toastHost.replaceChildren(el('div', { class: 'toast' }, msg));
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => { $toastHost.classList.add('hidden'); $toastHost.replaceChildren(); }, 5000);
+  _toastTimer = setTimeout(() => {
+    $toastHost.classList.add('hidden');
+    $toastHost.replaceChildren();
+  }, 4500);
 }
 
-/* ── Confetti ────────────────────────────────────────────────────────── */
 function launchConfetti() {
   const canvas = Object.assign(document.createElement('canvas'), {
     style: 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99',
   });
   document.body.append(canvas);
   const ctx = canvas.getContext('2d');
-  canvas.width = innerWidth; canvas.height = innerHeight;
-  const colours = ['#6b4cff','#ff7a14','#45c26d','#ff5a4f','#fff','#ffd166'];
-  const pieces = Array.from({ length: 90 }, () => ({
-    x: Math.random() * canvas.width, y: Math.random() * -canvas.height / 2,
-    r: Math.random() * 7 + 3,
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  const colours = ['#fafafa', '#3b82f6', '#10b981', '#f59e0b', '#71717a'];
+  const pieces = Array.from({ length: 65 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height / 2,
+    r: Math.random() * 6 + 3,
     c: colours[Math.floor(Math.random() * colours.length)],
-    vx: (Math.random() - 0.5) * 3, vy: Math.random() * 4 + 1.5,
-    rot: Math.random() * 360, vr: (Math.random() - 0.5) * 8,
+    vx: (Math.random() - 0.5) * 3,
+    vy: Math.random() * 3.5 + 1.5,
+    rot: Math.random() * 360,
+    vr: (Math.random() - 0.5) * 8,
   }));
   let raf;
   (function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pieces.forEach(p => {
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
-      ctx.fillStyle = p.c; ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
       ctx.restore();
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.06;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.05;
     });
     if (pieces.some(p => p.y < canvas.height + 10)) raf = requestAnimationFrame(draw);
     else canvas.remove();
   })();
-  setTimeout(() => { cancelAnimationFrame(raf); canvas.remove(); }, 4000);
+  setTimeout(() => { cancelAnimationFrame(raf); canvas.remove(); }, 3800);
 }
 
 let timer = null, S = null, guard = false, _keyHandler = null;
-window.addEventListener('beforeunload', e => { if (guard) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => {
+  if (guard) { e.preventDefault(); e.returnValue = ''; }
+});
 
-/* ──────────────────── HOME ──────────────────────────────────────────── */
+/* ──────────────────── HOME SCREEN ──────────────────────────────────── */
 async function home() {
-  clearInterval(timer); guard = false; undock();
+  clearInterval(timer);
+  guard = false;
+  undock();
   if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
-  // Skeleton loading state
+
+  // Clean skeleton state
   mount(
-    el('div', { class: 'hello' },
-      el('p', {}, 'Weekly quiz'),
-      el('div', { class: 'skel sk-h1' }),
-      el('div', { class: 'skel sk-sub' })),
-    el('div', { 'aria-hidden': 'true' },
-      el('div', { class: 'skel sk-row' }),
-      el('div', { class: 'skel sk-row' })));
+    el('div', { class: 'intro' },
+      el('h1', {}, 'Weekly Assessments'),
+      el('p', {}, 'Select your module to begin this week’s quiz.')),
+    el('div', { class: 'section-label' }, 'Available Quizzes'),
+    el('div', { class: 'quiz-list' },
+      el('div', { class: 'skel', style: 'height:68px;border-radius:12px' }),
+      el('div', { class: 'skel', style: 'height:68px;border-radius:12px' })));
+
   let weeks;
-  try { weeks = (await api('/api/weeks')).weeks; }
-  catch (e) {
+  try {
+    weeks = (await api('/api/weeks')).weeks;
+  } catch (e) {
     mount(
-      el('div', { class: 'hello' }, el('h1', {}, 'Weekly Quiz')),
-      el('div', { class: 'msg err', style: 'margin-top:90px' }, e.message),
-      el('button', { class: 'btn ghost', onclick: home }, 'Try again'));
+      el('div', { class: 'intro' },
+        el('h1', {}, 'Weekly Assessments'),
+        el('p', {}, 'Unable to reach evaluation server.')),
+      el('div', { class: 'block', style: 'margin-top:24px;border-color:var(--bad)' },
+        el('p', { style: 'color:var(--bad);margin:0 0 14px' }, e.message),
+        el('button', { class: 'btn-primary', onclick: home }, 'Retry connection')));
     return;
   }
-  const courseRows = w => w.courses.map(c => el('button', { class: 'row', onclick: () => nameForm(w, c) },
-    el('span', { class: 'dot', style: 'background:' + c.color }),
-    el('span', { class: 't' }, el('b', {}, c.title), el('small', {}, (c.code ? c.code + ' · ' : '') + c.count + ' questions · ' + c.timePerQ + 's each')),
-    el('span', { icon: ICON.chev })));
-  const out = [el('div', { class: 'hello' }, el('p', {}, 'Weekly quiz'), el('h1', {}, 'Pick a quiz and test yourself'))];
-  if (!weeks.length) out.push(el('div', { class: 'msg', style: 'margin-top:90px' }, 'No quizzes are open right now. Check back soon.'));
-  else {
-    out.push(el('div', { class: 'sec first' }, 'This week'));
-    out.push(el('div', { class: 'weekcard' }, el('h3', {}, weeks[0].label, el('span', { class: 'tag' }, 'NEW')), ...courseRows(weeks[0])));
+
+  const courseRows = w => w.courses.map(c => el('button', {
+    class: 'quiz-row',
+    onclick: () => nameForm(w, c),
+  },
+    el('div', { class: 'quiz-info' },
+      el('span', { class: 'quiz-title' }, c.title),
+      el('div', { class: 'quiz-meta' },
+        c.code ? el('span', { class: 'code-tag' }, c.code) : null,
+        el('span', {}, c.count + ' questions'),
+        el('span', {}, '•'),
+        el('span', {}, c.timePerQ + 's / question'))),
+    el('span', { class: 'quiz-arrow' }, '→')));
+
+  const out = [
+    el('div', { class: 'intro' },
+      el('h1', {}, 'Weekly Assessments'),
+      el('p', {}, 'Demonstrate comprehension with timed multiple-choice assessments.'))
+  ];
+
+  if (!weeks.length) {
+    out.push(el('div', { class: 'block', style: 'text-align:center;color:var(--text-muted);margin-top:24px' },
+      'No assessments are currently active. Please check back later.'));
+  } else {
+    out.push(el('div', { class: 'section-label' }, 'Current Session · ' + weeks[0].label));
+    out.push(el('div', { class: 'quiz-list' }, ...courseRows(weeks[0])));
+
     if (weeks.length > 1) {
-      out.push(el('div', { class: 'sec', style: 'margin-top:26px' }, 'Past weeks'));
-      weeks.slice(1).forEach(w => out.push(el('details', { class: 'past' },
-        el('summary', {}, el('span', {}, w.label), el('small', {}, w.courses.length + (w.courses.length === 1 ? ' quiz' : ' quizzes'))),
-        el('div', { class: 'in' }, ...courseRows(w)))));
+      out.push(el('div', { class: 'section-label', style: 'margin-top:36px' }, 'Previous Archives'));
+      weeks.slice(1).forEach(w => {
+        out.push(el('details', { class: 'history-box' },
+          el('summary', {},
+            el('span', {}, w.label),
+            el('span', { class: 'sum-meta' }, w.courses.length + (w.courses.length === 1 ? ' course' : ' courses'))),
+          el('div', { class: 'history-content' }, ...courseRows(w))));
+      });
     }
   }
+
   mount(...out);
 }
 
-/* ──────────────────── NAME FORM ─────────────────────────────────────── */
+/* ──────────────────── REGISTRATION FORM ────────────────────────────── */
 function nameForm(week, course) {
   undock();
-  const name    = el('input', { id: 'nm', autocomplete: 'name', placeholder: 'e.g. Adaeze Okafor', maxlength: 60, value: localStorage.getItem('q_name') || '' });
-  const contact = el('input', { id: 'ct', placeholder: 'Matric number, email or phone', maxlength: 80, value: localStorage.getItem('q_contact') || '' });
+  const name = el('input', {
+    id: 'nm',
+    autocomplete: 'name',
+    placeholder: 'e.g. Adaeze Okafor',
+    maxlength: 60,
+    value: localStorage.getItem('q_name') || ''
+  });
+  const contact = el('input', {
+    id: 'ct',
+    placeholder: 'Matric number, student ID or email',
+    maxlength: 80,
+    value: localStorage.getItem('q_contact') || ''
+  });
+
   const go = () => {
     const n = name.value.trim().replace(/\s+/g, ' ');
-    if (n.length < 2) { name.focus(); name.style.borderColor = 'var(--bad)'; return; }
-    localStorage.setItem('q_name', n); localStorage.setItem('q_contact', contact.value.trim());
+    if (n.length < 2) {
+      name.focus();
+      name.style.borderColor = 'var(--bad)';
+      return;
+    }
+    localStorage.setItem('q_name', n);
+    localStorage.setItem('q_contact', contact.value.trim());
     begin(week, course, n, contact.value.trim());
   };
+
   mount(
-    el('button', { class: 'back', onclick: home }, el('span', { icon: ICON.back }), 'Back'),
-    el('div', { class: 'formcard' },
-      el('h2', {}, course.title),
-      el('p', {}, week.label + ' · ' + course.count + ' questions · ' + course.timePerQ + ' seconds each'),
-      el('label', { for: 'nm' }, 'Full name'), name,
-      el('label', { for: 'ct' }, 'Matric number, email or phone (optional)'), contact,
-      el('p', { class: 'note' }, 'Answers stay hidden until you finish. Each question has a countdown, and when it ends you move on automatically. You cannot go back. Press 1–4 to pick an answer, Enter or Space to advance.')));
-  dock('Start quiz', go);
+    el('button', { class: 'back-btn', onclick: home }, '← Return to Courses'),
+    el('div', { class: 'block' },
+      el('div', { class: 'intro' },
+        el('h1', {}, course.title),
+        el('p', {}, week.label + ' · ' + course.count + ' Questions · ' + course.timePerQ + 's each')),
+      el('div', { class: 'field', style: 'margin-top:24px' },
+        el('label', { for: 'nm' }, 'Full Name *'),
+        name),
+      el('div', { class: 'field' },
+        el('label', { for: 'ct' }, 'Student Identification / Matriculation (Optional)'),
+        contact),
+      el('div', { class: 'guidance-box' },
+        el('p', { style: 'margin:0 0 6px' }, el('b', {}, 'Examination Rules:')),
+        el('p', { style: 'margin:0' }, 'Questions progress automatically when the countdown expires. You cannot return to previous questions. Answers and explanations are revealed upon submission.'))));
+
+  dock('Start Examination', go);
   name.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
 }
 
-/* ──────────────────── QUIZ ──────────────────────────────────────────── */
+/* ──────────────────── QUIZ ENGINE ──────────────────────────────────── */
 async function begin(week, course, name, contact) {
-  undock(); mount(el('div', { class: 'msg', style: 'margin-top:120px' }, 'Loading questions…'));
+  undock();
+  mount(
+    el('div', { class: 'intro' },
+      el('h1', {}, 'Preparing Questions…'),
+      el('p', {}, 'Fetching questions from secure evaluation bank.')),
+    el('div', { class: 'block', style: 'margin-top:24px' },
+      el('div', { class: 'skel', style: 'height:120px;border-radius:12px' })));
+
   try {
-    const d  = await api('/api/quiz?week=' + encodeURIComponent(week.id) + '&course=' + encodeURIComponent(course.id));
+    const d = await api('/api/quiz?week=' + encodeURIComponent(week.id) + '&course=' + encodeURIComponent(course.id));
     const qs = shuffle(d.questions).map(q => ({ i: q.i, q: q.q, opts: shuffle(q.opts) }));
     S = { week: d.week, course: d.course, name, contact, qs, idx: 0, ans: {}, t0: Date.now(), tpq: d.course.timePerQ };
-    guard = true; showQ();
+    guard = true;
+    showQ();
   } catch (e) {
-    mount(el('button', { class: 'back', onclick: home }, el('span', { icon: ICON.back }), 'Back'),
-      el('div', { class: 'msg err', style: 'margin-top:80px' }, e.message));
+    mount(
+      el('button', { class: 'back-btn', onclick: home }, '← Back'),
+      el('div', { class: 'block', style: 'border-color:var(--bad)' },
+        el('p', { style: 'color:var(--bad);margin:0' }, e.message)));
   }
 }
 
-const CIRC = 2 * Math.PI * 32;
 function showQ() {
   clearInterval(timer);
   if (_keyHandler) document.removeEventListener('keydown', _keyHandler);
 
-  const q = S.qs[S.idx], n = S.qs.length, answered = Object.keys(S.ans).length;
+  const q = S.qs[S.idx],
+        n = S.qs.length,
+        answered = Object.keys(S.ans).length;
 
-  // Timer ring
-  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); ring.setAttribute('viewBox', '0 0 88 88');
-  const mk = cls => { const x = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); x.setAttribute('class', cls); x.setAttribute('cx', 44); x.setAttribute('cy', 44); x.setAttribute('r', 32); return x; };
-  const fgc = mk('fg'); fgc.setAttribute('stroke-dasharray', CIRC.toFixed(1)); fgc.setAttribute('stroke-dashoffset', '0');
-  ring.append(mk('bg'), fgc);
+  const timerEl = el('span', { class: 'timer-pill', role: 'timer', 'aria-label': 'Time remaining' },
+    el('span', { id: 'timerNum' }, S.tpq + 's'));
 
-  const timerEl = el('div', { class: 'timer', role: 'timer', 'aria-label': 'Time remaining', 'aria-live': 'off' });
-  const num = el('b', { 'aria-hidden': 'true' }, S.tpq);
-  timerEl.append(ring, num);
-
-  // Options
-  const optsEl = el('ul', { class: 'opts', role: 'group', 'aria-labelledby': 'qtext' });
-  const refreshDock = () => dock(S.idx === n - 1 ? 'Finish' : 'Next', advance, !(q.i in S.ans));
-
+  const optsEl = el('ul', { class: 'options-list', role: 'group', 'aria-labelledby': 'qtext' });
   const optBtns = [];
+  const keys = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  const refreshDock = () => dock(S.idx === n - 1 ? 'Complete & Submit' : 'Next Question', advance, !(q.i in S.ans));
+
   q.opts.forEach((o, oi) => {
-    const kbdHint = el('span', { class: 'kbd', 'aria-hidden': 'true' }, String(oi + 1));
-    const b = el('button', { class: 'opt', 'aria-pressed': S.ans[q.i] === o ? 'true' : 'false' },
-      el('span', {}, o), kbdHint, el('span', { class: 'c', icon: ICON.check }));
+    const b = el('button', {
+      class: 'option-btn',
+      'aria-pressed': S.ans[q.i] === o ? 'true' : 'false'
+    },
+      el('span', { class: 'key-badge' }, keys[oi] || String(oi + 1)),
+      el('span', { class: 'option-label' }, o));
+
     b.onclick = () => selectOpt(oi);
     optBtns.push(b);
     optsEl.append(el('li', {}, b));
@@ -344,109 +981,179 @@ function showQ() {
   function selectOpt(oi) {
     S.ans[q.i] = q.opts[oi];
     optBtns.forEach((x, xi) => x.setAttribute('aria-pressed', xi === oi ? 'true' : 'false'));
-    document.getElementById('answeredChip').textContent = pad(Object.keys(S.ans).length) + ' of ' + n;
+    const badge = document.getElementById('ansCount');
+    if (badge) badge.textContent = pad(Object.keys(S.ans).length) + ' of ' + n;
     refreshDock();
   }
 
-  // Keyboard: digits 1-N select options, Enter/Space advances
+  // Keyboard navigation: 1-4 or A-D
   _keyHandler = e => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
     const digit = parseInt(e.key, 10);
-    if (digit >= 1 && digit <= q.opts.length) { e.preventDefault(); selectOpt(digit - 1); return; }
-    if ((e.key === 'Enter' || e.key === ' ') && q.i in S.ans) { e.preventDefault(); advance(); }
+    if (digit >= 1 && digit <= q.opts.length) {
+      e.preventDefault(); selectOpt(digit - 1); return;
+    }
+    const charCode = e.key.toUpperCase().charCodeAt(0) - 65;
+    if (charCode >= 0 && charCode < q.opts.length) {
+      e.preventDefault(); selectOpt(charCode); return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && q.i in S.ans) {
+      e.preventDefault(); advance();
+    }
   };
   document.addEventListener('keydown', _keyHandler);
 
   mount(
-    el('div', { class: 'top' },
-      el('span', { class: 'chip dark' }, el('span', { icon: ICON.user, style: 'display:inline-flex' }), pad(S.idx + 1) + ' of ' + n),
-      el('div', { class: 'bar' }, el('i', { style: 'width:' + (S.idx / n * 100) + '%' })),
-      el('span', { class: 'chip org' }, el('span', { icon: ICON.puzzle, style: 'display:inline-flex' }), el('span', { id: 'answeredChip' }, pad(answered) + ' of ' + n))),
-    el('div', { class: 'qcard' },
-      timerEl,
-      el('h2', {}, 'Question ', el('span', {}, pad(S.idx + 1))),
-      el('p', { class: 'sub' }, S.course.title),
-      el('p', { class: 'qtext', id: 'qtext' }, q.q)),
-    optsEl);
+    el('div', { class: 'exam-bar' },
+      el('span', { class: 'exam-chip' }, 'Q ' + pad(S.idx + 1) + ' / ' + pad(n)),
+      el('div', { class: 'track-wrap' },
+        el('div', { class: 'track-fill', style: 'width:' + ((S.idx + 1) / n * 100) + '%' })),
+      el('span', { class: 'exam-chip', id: 'ansCount' }, pad(answered) + ' of ' + pad(n))),
+    el('div', { class: 'block' },
+      el('div', { class: 'question-header' },
+        el('span', { class: 'q-badge' }, S.course.code || S.course.title),
+        timerEl),
+      el('h2', { class: 'question-text', id: 'qtext' }, q.q),
+      optsEl));
+
   refreshDock();
 
-  // Timer countdown
   const deadline = Date.now() + S.tpq * 1000;
+  const numNode = document.getElementById('timerNum');
+
   timer = setInterval(() => {
-    const left = (deadline - Date.now()) / 1000;
-    if (left <= 0) { clearInterval(timer); advance(true); return; }
-    num.textContent = Math.ceil(left);
-    fgc.setAttribute('stroke-dashoffset', (CIRC * (1 - left / S.tpq)).toFixed(1));
-    // Warn when 5 seconds remain
-    timerEl.classList.toggle('warn', left <= 5);
+    const left = Math.max(0, (deadline - Date.now()) / 1000);
+    if (left <= 0) {
+      clearInterval(timer);
+      advance(true);
+      return;
+    }
+    const secs = Math.ceil(left);
+    if (numNode) numNode.textContent = secs + 's';
+    timerEl.classList.toggle('urgent', secs <= 5);
   }, 100);
 }
 
 function advance() {
   clearInterval(timer);
-  if (S.idx < S.qs.length - 1) { S.idx++; showQ(); } else submit();
+  if (S.idx < S.qs.length - 1) {
+    S.idx++;
+    showQ();
+  } else {
+    submit();
+  }
 }
 
-/* ──────────────────── SUBMIT + RESULTS ─────────────────────────────── */
+/* ──────────────────── SUBMIT & REVIEW ──────────────────────────────── */
 async function submit() {
-  clearInterval(timer); undock();
+  clearInterval(timer);
+  undock();
   if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
-  mount(el('div', { class: 'msg', style: 'margin-top:120px' }, 'Marking your quiz…'));
+
+  mount(
+    el('div', { class: 'intro' },
+      el('h1', {}, 'Grading Assessment…'),
+      el('p', {}, 'Submitting verified results to database.')),
+    el('div', { class: 'block', style: 'margin-top:24px' },
+      el('div', { class: 'skel', style: 'height:80px;border-radius:12px' })));
+
   const payload = {
-    week: S.week.id, course: S.course.id, name: S.name, contact: S.contact,
+    week: S.week.id,
+    course: S.course.id,
+    name: S.name,
+    contact: S.contact,
     seconds: (Date.now() - S.t0) / 1000,
-    answers: Object.entries(S.ans).map(([i, a]) => ({ i: +i, a })),
+    answers: Object.entries(S.ans).map(([i, a]) => ({ i: +i, a }))
   };
+
   try {
-    const r = await api('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    guard = false; results(r);
+    const r = await api('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    guard = false;
+    results(r);
   } catch (e) {
-    mount(el('div', { class: 'msg err', style: 'margin-top:100px' }, 'Could not save your score. Your answers are still here — check your connection and try again.'));
+    mount(
+      el('div', { class: 'block', style: 'border-color:var(--bad);margin-top:40px' },
+        el('h2', { style: 'margin:0 0 8px;font-size:18px;color:var(--bad)' }, 'Submission Failed'),
+        el('p', { style: 'color:var(--text-muted);margin:0 0 16px' }, e.message + ' Your answers are intact.'),
+        el('button', { class: 'btn-primary', onclick: submit }, 'Retry Submission')));
     showToast(e.message);
-    dock('Retry submit', submit);
   }
 }
 
 function results(r) {
   undock();
   if (r.percent === 100) launchConfetti();
-  const verdict = r.percent >= 90 ? 'Excellent work' : r.percent >= 70 ? 'Good job' : r.percent >= 50 ? 'Getting there' : 'Keep practising';
-  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); ring.setAttribute('viewBox', '0 0 104 104');
-  const mk = cls => { const x = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); x.setAttribute('class', cls); x.setAttribute('cx', 52); x.setAttribute('cy', 52); x.setAttribute('r', 42); return x; };
-  const C2 = 2 * Math.PI * 42, fg = mk('fg'); fg.setAttribute('stroke-dasharray', C2.toFixed(1)); fg.setAttribute('stroke-dashoffset', (C2 * (1 - r.percent / 100)).toFixed(1));
-  ring.append(mk('bg'), fg);
+
+  const verdict = r.percent >= 80 ? 'Mastery Achieved' : r.percent >= 60 ? 'Satisfactory' : 'Needs Review';
   let onlyWrong = false;
-  const list = el('div');
-  const draw = () => {
-    list.replaceChildren(...r.review.map((x, i) => ({ x, i })).filter(({ x }) => !onlyWrong || !x.ok).map(({ x, i }) =>
-      el('div', { class: 'rev' },
-        el('div', { class: 'n' }, 'Question ' + (i + 1) + (x.ok ? ' · Correct' : x.yours === null ? ' · No answer' : ' · Wrong')),
-        el('p',  { class: 'q' }, x.q),
-        !x.ok && el('div', { class: 'a no' }, el('i', {}, '✕'), el('span', {}, x.yours === null ? 'You did not answer' : 'You chose: ' + x.yours)),
-        el('div', { class: 'a ok' }, el('i', {}, '✓'), el('span', {}, (x.ok ? 'Your answer: ' : 'Correct answer: ') + x.correct)),
-        x.why && el('p', { class: 'why' }, x.why))));
+  const reviewContainer = el('div');
+
+  const drawReview = () => {
+    reviewContainer.replaceChildren(
+      ...r.review
+        .map((x, i) => ({ x, i }))
+        .filter(({ x }) => !onlyWrong || !x.ok)
+        .map(({ x, i }) =>
+          el('div', { class: 'rev-item' },
+            el('div', { class: 'rev-top' },
+              el('span', { class: 'rev-index' }, 'Question ' + (i + 1)),
+              el('span', { class: 'rev-badge ' + (x.ok ? 'ok' : 'no') }, x.ok ? 'Correct' : x.yours === null ? 'Unanswered' : 'Incorrect')),
+            el('p', { class: 'rev-q' }, x.q),
+            !x.ok && el('div', { class: 'rev-answer-row wrong' },
+              el('strong', {}, 'Your selection:'),
+              el('span', {}, x.yours === null ? 'None' : x.yours)),
+            el('div', { class: 'rev-answer-row ' + (x.ok ? 'correct' : '') },
+              el('strong', {}, 'Correct answer:'),
+              el('span', {}, x.correct)),
+            x.why && el('div', { class: 'rev-why' },
+              el('strong', { style: 'color:var(--text-muted)' }, 'Explanation: '),
+              x.why))));
   };
-  const toggle = el('input', { type: 'checkbox', style: 'width:auto', onchange: e => { onlyWrong = e.target.checked; draw(); } });
-  draw();
+
+  const toggle = el('input', {
+    type: 'checkbox',
+    onchange: e => { onlyWrong = e.target.checked; drawReview(); }
+  });
+
+  drawReview();
+
   mount(
-    el('div', { class: 'top' }, el('span', { class: 'chip dark' }, S.week.label), el('div', { class: 'bar' }, el('i', { style: 'width:100%' })), el('span', { class: 'chip org' }, 'Done')),
-    el('div', { class: 'rcard' },
-      el('div', { class: 'rring', 'aria-hidden': 'true' }, ring, el('b', {}, r.percent + '%')),
-      el('h2', {}, verdict + ', ' + S.name.split(' ')[0]),
-      el('div', { class: 'big', 'aria-label': r.score + ' out of ' + r.total }, String(r.score), el('small', { 'aria-hidden': 'true' }, ' / ' + r.total)),
-      el('p', {}, S.course.title),
-      el('p', { class: 'sent' }, 'Your score has been sent to the admin' + (r.attempt > 1 ? ' (attempt ' + r.attempt + ')' : '') + '.')),
-    el('div', { class: 'revh' }, el('h3', {}, 'Review your answers'), el('label', { class: 'sw', style: 'margin:0' }, toggle, 'Wrong only')),
-    list,
-    el('button', { class: 'btn', style: 'margin-top:8px', onclick: () => { const w = { id: S.week.id, label: S.week.label }; nameForm(w, { id: S.course.id, title: S.course.title, count: S.qs.length, timePerQ: S.tpq }); } }, 'Try again'),
-    el('button', { class: 'btn ghost', onclick: home }, 'All quizzes'));
+    el('div', { class: 'block score-card' },
+      el('div', { class: 'score-circle' },
+        el('span', { class: 'pct' }, r.percent + '%'),
+        el('span', { class: 'score-fraction' }, r.score + ' / ' + r.total)),
+      el('h1', { class: 'score-headline' }, verdict),
+      el('p', { class: 'score-sub' }, S.name + ' · ' + S.course.title),
+      el('div', { style: 'display:flex;gap:10px;justify-content:center;flex-wrap:wrap' },
+        el('button', {
+          class: 'btn-primary',
+          style: 'width:auto;padding:11px 22px',
+          onclick: () => {
+            const w = { id: S.week.id, label: S.week.label };
+            nameForm(w, { id: S.course.id, title: S.course.title, count: S.qs.length, timePerQ: S.tpq });
+          }
+        }, 'Retake Quiz'),
+        el('button', {
+          class: 'btn-secondary',
+          style: 'width:auto;margin:0;padding:11px 22px',
+          onclick: home
+        }, 'Return to Dashboard'))),
+    el('div', { class: 'review-header' },
+      el('h2', {}, 'Detailed Question Breakdown'),
+      el('label', { class: 'toggle-filter' },
+        toggle,
+        'Mistakes only')),
+    reviewContainer);
 }
 
 home();
 
-/* ── Service Worker registration ─────────────────────────────────────── */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {/* non-fatal */});
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 </script>
 </body>
