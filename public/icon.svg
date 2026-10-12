@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#6b4cff"/>
+  <!-- Puzzle-piece silhouette, white -->
+  <path fill="#fff" fill-opacity=".95"
+    d="M200 152a28 28 0 0 1 56 0v20h68a14 14 0 0 1 14 14v68h-20a28 28 0 0 0 0 56h20v68a14 14 0 0 1-14 14h-68v-20a28 28 0 0 0-56 0v20h-68a14 14 0 0 1-14-14v-68h20a28 28 0 0 0 0-56h-20v-68a14 14 0 0 1 14-14h68z"/>
+</svg>

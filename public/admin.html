@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Quiz Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{--purple:#6b4cff;--bg:#141416;--panel:#232326;--line:#3a3a40;--orange:#ff7a14;--muted:#a8a6bd;--good:#45c26d;--bad:#ff5a4f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.hidden{display:none!important}
+header{background:var(--purple);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header h1{margin:0;font-size:19px}
+header button{background:rgba(0,0,0,.28);border:none;border-radius:10px;padding:8px 14px;font-weight:600}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+.login{max-width:380px;margin:80px auto;padding:0 16px}
+.login .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.login h2{margin:0 0 4px}.login p{margin:0 0 16px;color:var(--muted)}
+input,select,textarea{width:100%;background:#1a1a1d;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px}
+input:focus,select:focus,textarea:focus{border-color:var(--orange);outline:none}
+.btn{background:var(--orange);color:#111;border:none;border-radius:10px;padding:11px 18px;font-weight:700}
+.btn.sec{background:transparent;color:#fff;border:1px solid var(--line);font-weight:600}
+.btn.del{background:transparent;color:var(--bad);border:1px solid #5a2b28;font-weight:600;padding:6px 10px;font-size:12.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.err{color:var(--bad);margin-top:10px}.ok{color:var(--good);margin-top:10px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-weight:600}
+.tab[aria-selected=true]{background:var(--orange);border-color:var(--orange);color:#111}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12.5px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;justify-content:space-between}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;user-select:none;background:#1d1d20;position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+td small{display:block;color:var(--muted)}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-weight:700;font-size:12.5px}
+.hi{background:#173d27;color:var(--good)}.mid{background:#3d3217;color:#f2c14e}.lo{background:#3d1b19;color:var(--bad)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}.card .meta{color:var(--muted);font-size:13px;margin-bottom:10px}
+.card .acts{display:flex;gap:8px;flex-wrap:wrap}
+textarea{min-height:260px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+label{display:block;margin:12px 0 6px;font-weight:500;color:#d8d4f5}
+.help{color:var(--muted);font-size:13px;line-height:1.55}
+a{color:#b9a8ff}
+/* Confirmation modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:200;padding:20px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:360px;width:100%}
+.modal-msg{margin:0 0 6px;font-size:15.5px;font-weight:600}
+.modal-sub{margin:0 0 20px;color:var(--muted);font-size:13.5px}
+.modal-acts{display:flex;gap:10px;justify-content:flex-end}
+/* Edit label inline */
+.edit-label-form{display:flex;gap:8px;margin-top:10px;align-items:center}
+.edit-label-form input{padding:8px 10px;font-size:14px;border-radius:8px}
+/* Spinner */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:20px}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="box">
+    <h2>Quiz admin</h2><p>Enter the admin password to see scores.</p>
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+    <div style="margin-top:14px"><button class="btn" id="loginBtn" style="width:100%">Sign in</button></div>
+    <div id="loginErr" class="err" role="alert"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <h1>Quiz admin</h1>
+    <div>
+      <button id="refresh">Refresh</button>
+      <button id="logout">Sign out</button>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="tabs" role="tablist" aria-label="Admin sections">
+      <button class="tab" role="tab" id="tScores" aria-selected="true" aria-controls="scores">Scores</button>
+      <button class="tab" role="tab" id="tWeeks"  aria-selected="false" aria-controls="weeks">Weeks</button>
+    </div>
+
+    <section id="scores" role="tabpanel" aria-labelledby="tScores">
+      <div class="stats">
+        <div class="stat"><b id="sAttempts">0</b><span>Attempts</span></div>
+        <div class="stat"><b id="sPeople">0</b><span>People</span></div>
+        <div class="stat"><b id="sAvg">0%</b><span>Average</span></div>
+      </div>
+      <div class="filters">
+        <select id="fWeek"   aria-label="Filter by week"></select>
+        <select id="fCourse" aria-label="Filter by quiz"></select>
+        <select id="fMode"   aria-label="Filter attempt type">
+          <option value="all">All attempts</option>
+          <option value="first">First attempts only</option>
+          <option value="best">Best attempt per person</option>
+        </select>
+        <input id="fSearch" placeholder="Search name or contact" aria-label="Search by name or contact">
+      </div>
+      <div class="bar">
+        <span class="help" id="count" aria-live="polite"></span>
+        <button class="btn sec" id="csv">Download CSV</button>
+      </div>
+      <div class="tw">
+        <table aria-label="Quiz results">
+          <caption class="hidden">Quiz results — sortable by clicking column headings</caption>
+          <thead><tr id="thead"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="weeks" class="hidden" role="tabpanel" aria-labelledby="tWeeks">
+      <div id="weekList"></div>
+      <div class="card">
+        <h3>Add a new week</h3>
+        <p class="help">Each week is a set of quizzes. Old weeks stay open for newcomers until you close them. To make questions: upload the new PDFs to Claude, ask for "this week's quiz in the admin JSON format", then paste the result below.</p>
+        <label for="wLabel">Week label</label>
+        <input id="wLabel" placeholder="e.g. Week 2 (19 Oct)">
+        <label for="wJson">Quiz JSON</label>
+        <textarea id="wJson" spellcheck="false" placeholder="Paste the JSON here&#10;&#10;As you type, a live preview will appear below."></textarea>
+        <div id="wMsg" aria-live="polite"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn" id="wCreate">Publish week</button>
+          <button class="btn sec" id="wTemplate">Insert example format</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Confirmation modal (shared) -->
+<div id="modalBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalMsg">
+  <div class="modal">
+    <p class="modal-msg" id="modalMsg"></p>
+    <p class="modal-sub" id="modalSub"></p>
+    <div class="modal-acts">
+      <button class="btn sec" id="modalCancel">Cancel</button>
+      <button class="btn del" id="modalConfirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let PW = sessionStorage.getItem('adminpw') || '', DATA = { weeks: [], results: [] }, sort = { k: 'at', dir: -1 };
+
+function el(tag, props, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === 'class') n.className = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v != null && v !== false) n.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) { if (c == null || c === false) continue; n.append(c.nodeType ? c : document.createTextNode(c)); }
+  return n;
+}
+
+async function call(method, body) {
+  const r = await fetch('/api/admin', {
+    method, headers: { 'Content-Type': 'application/json', 'x-admin-password': PW },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  let j = {}; try { j = await r.json(); } catch {}
+  if (r.status === 401) { signOut('Wrong password'); throw new Error('Wrong password'); }
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+  return j;
+}
+
+function signOut(msg) {
+  sessionStorage.removeItem('adminpw'); PW = '';
+  $('app').classList.add('hidden'); $('login').classList.remove('hidden');
+  $('loginErr').textContent = msg || '';
+}
+
+async function load() {
+  DATA = await call('GET');
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  fillFilters(); renderScores(); renderWeeks();
+}
+
+/* ── Login ─────────────────────────────────────────────────────────── */
+$('loginBtn').onclick = async () => {
+  PW = $('pw').value; $('loginErr').textContent = '';
+  $('loginBtn').disabled = true;
+  $('loginBtn').innerHTML = '<span class="spin"></span>Signing in…';
+  try { await load(); sessionStorage.setItem('adminpw', PW); }
+  catch (e) { $('loginErr').textContent = e.message; }
+  finally { $('loginBtn').disabled = false; $('loginBtn').textContent = 'Sign in'; }
+};
+$('pw').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
+$('logout').onclick = () => signOut('');
+
+$('refresh').onclick = async () => {
+  $('refresh').disabled = true;
+  $('refresh').innerHTML = '<span class="spin"></span>Refreshing…';
+  try { await load(); } catch (e) { alert(e.message); }
+  finally { $('refresh').disabled = false; $('refresh').textContent = 'Refresh'; }
+};
+
+/* ── Tabs ───────────────────────────────────────────────────────────── */
+$('tScores').onclick = () => tab('scores');
+$('tWeeks').onclick  = () => tab('weeks');
+function tab(t) {
+  $('scores').classList.toggle('hidden', t !== 'scores');
+  $('weeks').classList.toggle('hidden',  t !== 'weeks');
+  $('tScores').setAttribute('aria-selected', t === 'scores');
+  $('tWeeks').setAttribute('aria-selected',  t === 'weeks');
+}
+
+/* ── Custom confirmation modal ──────────────────────────────────────── */
+let _modalResolve;
+function confirm_(title, sub) {
+  return new Promise(resolve => {
+    _modalResolve = resolve;
+    $('modalMsg').textContent = title;
+    $('modalSub').textContent = sub || '';
+    $('modalBackdrop').classList.remove('hidden');
+    $('modalConfirm').focus();
+  });
+}
+$('modalCancel').onclick  = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(false); };
+$('modalConfirm').onclick = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(true); };
+$('modalBackdrop').addEventListener('keydown', e => { if (e.key === 'Escape') $('modalCancel').click(); });
+$('modalBackdrop').addEventListener('click', e => { if (e.target === $('modalBackdrop')) $('modalCancel').click(); });
+
+/* ── Scores ─────────────────────────────────────────────────────────── */
+function fillFilters() {
+  const cur = $('fWeek').value;
+  $('fWeek').replaceChildren(el('option', { value: '' }, 'All weeks'), ...DATA.weeks.map(w => el('option', { value: w.id }, w.label + (w.open === false ? ' (closed)' : ''))));
+  $('fWeek').value = DATA.weeks.some(w => w.id === cur) ? cur : '';
+  fillCourses();
+}
+function fillCourses() {
+  const wk = $('fWeek').value, cur = $('fCourse').value, seen = new Map();
+  DATA.weeks.filter(w => !wk || w.id === wk).forEach(w => w.courses.forEach(c => seen.set(c.id, c.title)));
+  $('fCourse').replaceChildren(el('option', { value: '' }, 'All quizzes'), ...[...seen].map(([id, t]) => el('option', { value: id }, t)));
+  $('fCourse').value = seen.has(cur) ? cur : '';
+}
+$('fWeek').onchange = () => { fillCourses(); renderScores(); };
+['fCourse', 'fMode'].forEach(i => $(i).onchange = renderScores);
+$('fSearch').oninput = renderScores;
+
+const COLS = [['name','Name'],['courseTitle','Quiz'],['weekLabel','Week'],['score','Score'],['percent','%'],['seconds','Time'],['attempt','Attempt'],['at','Date']];
+function filtered() {
+  const wk = $('fWeek').value, co = $('fCourse').value, q = $('fSearch').value.trim().toLowerCase(), mode = $('fMode').value;
+  let rows = DATA.results.filter(r => (!wk || r.week === wk) && (!co || r.course === co) && (!q || (r.name + ' ' + (r.contact || '')).toLowerCase().includes(q)));
+  if (mode === 'first') rows = rows.filter(r => r.attempt === 1);
+  if (mode === 'best') {
+    const best = new Map();
+    rows.forEach(r => { const k = [r.week, r.course, r.name.toLowerCase()].join('|'); const b = best.get(k); if (!b || r.score > b.score || (r.score === b.score && r.seconds < b.seconds)) best.set(k, r); });
+    rows = [...best.values()];
+  }
+  const k = sort.k, d = sort.dir;
+  return rows.sort((a, b) => (typeof a[k] === 'string' ? a[k].localeCompare(b[k]) : a[k] - b[k]) * d);
+}
+const fmtTime = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+const fmtDate = t => new Date(t).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+function renderScores() {
+  const rows = filtered();
+  $('thead').replaceChildren(...COLS.map(([k, l]) => el('th', {
+    onclick: () => { sort = { k, dir: sort.k === k ? -sort.dir : (k === 'name' || k === 'courseTitle' || k === 'weekLabel' ? 1 : -1) }; renderScores(); },
+    'aria-sort': sort.k === k ? (sort.dir > 0 ? 'ascending' : 'descending') : 'none',
+  }, l + (sort.k === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''))), el('th', {}, ''));
+  $('tbody').replaceChildren(...(rows.length ? rows.map(r => el('tr', {},
+    el('td', {}, r.name, r.contact ? el('small', {}, r.contact) : null),
+    el('td', {}, r.courseTitle), el('td', {}, r.weekLabel),
+    el('td', {}, r.score + ' / ' + r.total),
+    el('td', {}, el('span', { class: 'pill ' + (r.percent >= 70 ? 'hi' : r.percent >= 50 ? 'mid' : 'lo') }, r.percent + '%')),
+    el('td', {}, fmtTime(r.seconds)), el('td', {}, '#' + r.attempt), el('td', {}, fmtDate(r.at)),
+    el('td', {}, el('button', {
+      class: 'btn del',
+      'aria-label': 'Delete attempt by ' + r.name,
+      onclick: async function () {
+        const ok = await confirm_('Delete this attempt?', 'By ' + r.name + ' — this cannot be undone.');
+        if (!ok) return;
+        this.disabled = true; this.innerHTML = '<span class="spin"></span>';
+        try { await call('POST', { action: 'deleteResult', id: r.id }); await load(); }
+        catch (e) { alert(e.message); this.disabled = false; this.textContent = 'Delete'; }
+      },
+    }, 'Delete'))))
+    : [el('tr', {}, el('td', { colspan: 9, class: 'empty' }, 'No attempts yet'))]));
+  const people = new Set(rows.map(r => r.name.toLowerCase()));
+  $('sAttempts').textContent = rows.length; $('sPeople').textContent = people.size;
+  $('sAvg').textContent = rows.length ? Math.round(rows.reduce((a, r) => a + r.percent, 0) / rows.length) + '%' : '0%';
+  $('count').textContent = rows.length + ' result' + (rows.length === 1 ? '' : 's') + ' shown';
+}
+
+$('csv').onclick = () => {
+  const esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const head = ['Name','Contact','Quiz','Week','Score','Total','Percent','Seconds','Attempt','Date'];
+  const lines = [head.map(esc).join(',')].concat(filtered().map(r => [r.name, r.contact, r.courseTitle, r.weekLabel, r.score, r.total, r.percent, r.seconds, r.attempt, new Date(r.at).toISOString()].map(esc).join(',')));
+  const a = el('a', { href: URL.createObjectURL(new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' })), download: 'quiz-scores.csv' });
+  document.body.append(a); a.click(); a.remove();
+};
+
+/* ── Weeks ──────────────────────────────────────────────────────────── */
+function renderWeeks() {
+  $('weekList').replaceChildren(...DATA.weeks.map((w, i) => {
+    const n = DATA.results.filter(r => r.week === w.id).length;
+    // Inline edit label UI
+    let editOpen = false;
+    const editRow = el('div', { class: 'edit-label-form hidden' });
+    const editInput = el('input', { type: 'text', value: w.label, 'aria-label': 'New week label', style: 'flex:1' });
+    const editSaveBtn = el('button', { class: 'btn', style: 'white-space:nowrap', onclick: async () => {
+      const newLabel = editInput.value.trim();
+      if (!newLabel || newLabel === w.label) { editRow.classList.add('hidden'); editOpen = false; return; }
+      editSaveBtn.disabled = true; editSaveBtn.innerHTML = '<span class="spin"></span>Saving…';
+      try { await call('POST', { action: 'editWeek', week: w.id, label: newLabel }); await load(); }
+      catch (e) { alert(e.message); editSaveBtn.disabled = false; editSaveBtn.textContent = 'Save'; }
+    } }, 'Save');
+    editRow.append(editInput, editSaveBtn, el('button', { class: 'btn sec', onclick: () => { editRow.classList.add('hidden'); editOpen = false; } }, 'Cancel'));
+
+    const card = el('div', { class: 'card' },
+      el('h3', {}, w.label + (i === 0 ? '  (current)' : '') + (w.open === false ? '  (closed)' : '')),
+      el('div', { class: 'meta' }, w.courses.map(c => c.title + ' (' + c.count + ')').join(' · ') + ' — ' + n + ' attempt' + (n === 1 ? '' : 's')),
+      editRow,
+      el('div', { class: 'acts' },
+        el('button', { class: 'btn sec', onclick: async function () {
+          this.disabled = true; this.innerHTML = '<span class="spin"></span>Saving…';
+          try { await call('POST', { action: 'setOpen', week: w.id, open: w.open === false }); await load(); }
+          catch (e) { alert(e.message); this.disabled = false; this.textContent = w.open === false ? 'Reopen for students' : 'Close for students'; }
+        } }, w.open === false ? 'Reopen for students' : 'Close for students'),
+        el('button', { class: 'btn sec', onclick: () => {
+          editOpen = !editOpen; editRow.classList.toggle('hidden', !editOpen);
+          if (editOpen) { editInput.value = w.label; editInput.focus(); editInput.select(); }
+        } }, 'Edit label'),
+        el('button', {
+          class: 'btn del',
+          'aria-label': 'Delete week ' + w.label,
+          onclick: async function () {
+            const ok = await confirm_('Delete "' + w.label + '"?', 'Questions will be removed. Past scores are kept.');
+            if (!ok) return;
+            this.disabled = true; this.innerHTML = '<span class="spin"></span>';
+            try { await call('POST', { action: 'deleteWeek', week: w.id }); await load(); }
+            catch (e) { alert(e.message); this.disabled = false; this.textContent = 'Delete week'; }
+          },
+        }, 'Delete week')));
+    return card;
+  }));
+}
+
+/* ── JSON live preview ───────────────────────────────────────────────── */
+$('wJson').addEventListener('input', () => {
+  const msg = $('wMsg'), val = $('wJson').value.trim();
+  if (!val) { msg.className = ''; msg.textContent = ''; return; }
+  try {
+    const courses = JSON.parse(val);
+    if (!Array.isArray(courses)) { msg.className = 'err'; msg.textContent = '✕ JSON must be an array […]'; return; }
+    const qCount = courses.reduce((a, c) => a + (Array.isArray(c.questions) ? c.questions.length : 0), 0);
+    msg.className = 'ok';
+    msg.textContent = '✓ ' + courses.length + ' course' + (courses.length === 1 ? '' : 's') + ', ' + qCount + ' question' + (qCount === 1 ? '' : 's') + ' total';
+  } catch (e) {
+    msg.className = 'err'; msg.textContent = '✕ ' + e.message;
+  }
+});
+
+$('wTemplate').onclick = () => {
+  $('wJson').value = JSON.stringify([{ title: 'Introduction to Marketing', code: 'MKT101', timePerQ: 30, questions: [
+    { q: 'What does the first P in the 4Ps of marketing stand for?', opts: ['Product','Profit','People','Paper'], ans: 'Product', why: 'The 4Ps are product, price, place and promotion.' },
+    { q: 'Which P covers advertising and sales offers?', opts: ['Promotion','Price','Place','Product'], ans: 'Promotion', why: 'Promotion is how a business communicates with customers.' }] }], null, 2);
+  // Trigger live preview
+  $('wJson').dispatchEvent(new Event('input'));
+};
+
+$('wCreate').onclick = async () => {
+  const msg = $('wMsg'); msg.className = ''; msg.textContent = '';
+  const label = $('wLabel').value.trim();
+  let courses; try { courses = JSON.parse($('wJson').value); } catch { msg.className = 'err'; msg.textContent = 'That is not valid JSON. Paste exactly what Claude gave you.'; return; }
+  $('wCreate').disabled = true; $('wCreate').innerHTML = '<span class="spin"></span>Publishing…';
+  try {
+    await call('POST', { action: 'createWeek', label, courses });
+    msg.className = 'ok'; msg.textContent = 'Published. It is now the current week.';
+    $('wLabel').value = ''; $('wJson').value = ''; await load();
+  }
+  catch (e) { msg.className = 'err'; msg.textContent = e.message; }
+  $('wCreate').disabled = false; $('wCreate').textContent = 'Publish week';
+};
+
+if (PW) load().catch(() => signOut(''));
+</script>
+</body>
+</html>

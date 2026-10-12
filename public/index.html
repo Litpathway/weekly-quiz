@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6b4cff">
+<meta name="description" content="Take your weekly course quiz, get instant feedback, and see your score.">
+<meta property="og:title" content="Weekly Quiz">
+<meta property="og:description" content="Take your weekly course quiz and see your results instantly.">
+<meta property="og:type" content="website">
+<title>Weekly Quiz</title>
+<!-- Inline critical font-face so the first paint isn't blocked by a network round-trip -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%236b4cff'/><path fill='%23fff' d='M11 9a4 4 0 0 1 8 0v2h5a1 1 0 0 1 1 1v5h-2a4 4 0 0 0 0 8h2v5a1 1 0 0 1-1 1h-5v-2a4 4 0 0 0-8 0v2H6a1 1 0 0 1-1-1v-5h2a4 4 0 0 0 0-8H5v-5a1 1 0 0 1 1-1h5z'/></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quiz">
+<style>
+:root{--purple:#6b4cff;--bg:#18181a;--panel:#262628;--line:#3b3b40;--card:#2a1f70;--orange:#ff7a14;--muted:#a8a6bd;--good:#45c26d;--bad:#ff5a4f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#0e0e10;color:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.app{max-width:430px;min-height:100vh;min-height:100dvh;margin:0 auto;position:relative;overflow:hidden;background:linear-gradient(#1c1c1f,#141416)}
+.hero{position:absolute;left:0;right:0;top:0;height:270px;background:var(--purple);clip-path:polygon(0 0,100% 0,100% 100%,50% 88%,0 100%)}
+main{position:relative;padding:22px 24px calc(110px + env(safe-area-inset-bottom))}
+.hidden{display:none!important}
+
+/* Screen fade */
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+main>*{animation:fadein .15s ease both}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:12px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:10px;font-weight:600;font-size:13px;white-space:nowrap}
+.chip.dark{background:#111}.chip.org{background:var(--orange);color:#111}
+.chip svg{width:16px;height:16px}
+.bar{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.3);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--orange);border-radius:8px;transition:width .3s}
+
+/* question card */
+.qcard{position:relative;margin-top:62px;background:var(--card);border-radius:22px;padding:56px 18px 24px;text-align:center}
+.timer{position:absolute;left:50%;top:-44px;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:#171717;border:6px solid var(--purple);display:grid;place-items:center}
+.timer svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.timer circle{fill:none;stroke-width:5;stroke-linecap:round}
+.timer .bg{stroke:#2e2e33}.timer .fg{stroke:var(--orange);stroke-dasharray:201;stroke-dashoffset:0;transition:stroke .3s}
+.timer b{position:relative;font-size:24px;font-weight:700;transition:color .3s}
+/* Warning state: timer turns red when ≤ 5 s remain */
+.timer.warn .fg{stroke:var(--bad)}
+.timer.warn b{color:var(--bad)}
+.qcard h2{margin:0;font-size:22px;font-weight:600}
+.qcard h2 span{color:var(--orange)}
+.sub{color:#8f8cb3;font-size:14px;margin:12px 0 0;padding-bottom:14px;border-bottom:1px dashed rgba(255,255,255,.25)}
+.qtext{margin:16px 0 0;font-size:18px;font-weight:600;line-height:1.4}
+
+/* options */
+.opts{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
+.opt{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 18px;font-size:15px;font-weight:500;min-height:62px}
+.opt .c{flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid #55555b;display:grid;place-items:center}
+.opt .c svg{width:16px;height:16px;opacity:0}
+.opt[aria-pressed=true]{border-color:var(--orange);color:var(--orange);background:#2d231c}
+.opt[aria-pressed=true] .c{background:var(--orange);border-color:var(--orange);color:#111}
+.opt[aria-pressed=true] .c svg{opacity:1}
+/* Keyboard shortcut hint badge */
+.opt .kbd{flex:none;font-size:11px;font-weight:700;color:var(--muted);background:#1f1f22;border:1px solid #3b3b40;border-radius:6px;padding:2px 6px;min-width:22px;text-align:center}
+
+/* buttons */
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;padding:14px 24px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#141416 38%)}
+.btn{display:block;width:100%;background:var(--orange);color:#fff;font-weight:600;font-size:16px;border-radius:999px;padding:17px;text-align:center}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:#fff;margin-top:12px}
+
+/* home */
+.hello{padding:10px 0 0}
+.hello p{margin:0;color:#e3dcff;font-size:14px}
+.hello h1{margin:4px 0 0;font-size:30px;line-height:1.15;font-weight:700}
+.sec{margin:70px 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sec.first{margin-top:46px}
+.weekcard{background:var(--card);border-radius:20px;padding:16px 14px 6px;margin-bottom:14px}
+.weekcard h3{margin:0 0 12px 4px;font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
+.tag{font-size:11px;background:var(--orange);color:#111;padding:3px 9px;border-radius:99px;font-weight:700}
+.row{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.dot{flex:none;width:12px;height:36px;border-radius:6px}
+.row .t{flex:1;min-width:0}.row .t b{display:block;font-size:14.5px;font-weight:600;line-height:1.3}
+.row .t small{color:var(--muted);font-size:12.5px}
+.row svg{flex:none;width:18px;height:18px;color:var(--muted)}
+details.past{margin-bottom:12px;background:#222226;border-radius:16px;border:1px solid var(--line)}
+details.past summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+details.past summary::-webkit-details-marker{display:none}
+details.past summary small{color:var(--muted);font-weight:400}
+details.past .in{padding:0 12px 4px}
+.msg{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--muted);text-align:center}
+.err{color:var(--bad)}
+
+/* Skeleton loader */
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel{border-radius:12px;background:linear-gradient(90deg,#282830 25%,#33333d 50%,#282830 75%);background-size:200% 100%;animation:shimmer 1.4s ease-in-out infinite}
+.sk-h1{height:28px;width:70%;margin-bottom:12px;border-radius:8px}
+.sk-sub{height:14px;width:40%;margin-bottom:32px;border-radius:6px}
+.sk-row{height:80px;margin-bottom:12px;border-radius:16px}
+
+/* form */
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;padding:6px 0}
+.back svg{width:18px;height:18px}
+.formcard{margin-top:70px;background:var(--card);border-radius:22px;padding:24px 18px}
+.formcard h2{margin:0;font-size:21px}
+.formcard p{margin:6px 0 18px;color:#c9c5ee;font-size:14px}
+label{display:block;font-size:13px;font-weight:500;color:#d8d4f5;margin:14px 0 6px}
+input{width:100%;background:#181826;border:1px solid #4a4290;border-radius:14px;padding:14px;font-size:16px}
+input:focus{border-color:var(--orange);outline:none}
+.note{font-size:12.5px;color:#a9a5d6;margin-top:16px}
+
+/* results */
+.rcard{margin-top:56px;background:var(--card);border-radius:22px;padding:60px 18px 24px;text-align:center;position:relative}
+.rring{position:absolute;left:50%;top:-52px;transform:translateX(-50%);width:104px;height:104px;border-radius:50%;background:#171717;border:6px solid var(--purple);display:grid;place-items:center}
+.rring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.rring circle{fill:none;stroke-width:6;stroke-linecap:round}
+.rring .bg{stroke:#2e2e33}.rring .fg{stroke:var(--orange)}
+.rring b{position:relative;font-size:24px}
+.rcard h2{margin:0;font-size:22px}
+.rcard .big{font-size:42px;font-weight:700;margin:6px 0 0;line-height:1.1}
+.rcard .big small{font-size:20px;color:#a9a5d6;font-weight:500}
+.rcard p{color:#cfcaf5;margin:10px 0 0;font-size:14px}
+.sent{margin-top:16px;font-size:12.5px;color:#8f8cb3}
+.revh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 12px}
+.revh h3{margin:0;font-size:17px}
+.sw{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.rev{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.rev .n{font-size:12px;color:var(--muted);font-weight:600}
+.rev .q{margin:4px 0 10px;font-weight:600;font-size:14.5px;line-height:1.4}
+.rev .a{font-size:13.5px;margin:4px 0;display:flex;gap:8px}
+.rev .a i{flex:none;font-style:normal;font-weight:700}
+.rev .ok{color:var(--good)}.rev .no{color:var(--bad)}
+.rev .why{margin:10px 0 0;font-size:13px;color:var(--muted);padding-top:10px;border-top:1px dashed var(--line)}
+
+/* Toast notification */
+.toast-host{position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:50;width:calc(100% - 48px);max-width:382px;pointer-events:none}
+.toast{background:#2a1212;border:1px solid #7a2020;border-radius:14px;padding:12px 16px;font-size:13.5px;color:#ffaaaa;pointer-events:auto;animation:fadein .2s ease}
+
+@media (prefers-reduced-motion:reduce){.bar i,main>*,.timer .fg,.timer b,.toast{transition:none;animation:none}.skel{animation:none;background:#282830}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hero" aria-hidden="true"></div>
+  <main id="view" aria-label="Quiz" aria-live="polite"></main>
+</div>
+<div class="dock hidden" id="dock"><button class="btn" id="dockBtn"></button></div>
+<div class="toast-host hidden" id="toastHost" role="status" aria-live="assertive" aria-atomic="true"></div>
+
+<script>
+const ICON = {
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  puzzle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4a2 2 0 1 1 4 0v2h4a1 1 0 0 1 1 1v4h-2a2 2 0 1 0 0 4h2v4a1 1 0 0 1-1 1h-4v-2a2 2 0 1 0-4 0v2H6a1 1 0 0 1-1-1v-4H3v-4h2V7a1 1 0 0 1 1-1h4z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>'
+};
+const $view = document.getElementById('view'), $dock = document.getElementById('dock'), $dockBtn = document.getElementById('dockBtn');
+const $toastHost = document.getElementById('toastHost');
+const pad = n => String(n).padStart(2, '0');
+
+function el(tag, props, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === 'class') n.className = v;
+    else if (k === 'icon') n.innerHTML = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) { if (c == null || c === false) continue; n.append(c.nodeType ? c : document.createTextNode(c)); }
+  return n;
+}
+const svgIcon = html => { const s = el('span', { icon: html }); return s.firstChild; };
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  let j = {}; try { j = await r.json(); } catch {}
+  if (!r.ok) throw new Error(j.error || 'Something went wrong (' + r.status + ')');
+  return j;
+}
+function mount(...nodes) { $view.replaceChildren(...nodes); window.scrollTo(0, 0); }
+function dock(label, fn, disabled) { $dock.classList.remove('hidden'); $dockBtn.textContent = label; $dockBtn.disabled = !!disabled; $dockBtn.onclick = fn; }
+function undock() { $dock.classList.add('hidden'); }
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+let _toastTimer;
+function showToast(msg) {
+  $toastHost.classList.remove('hidden');
+  $toastHost.replaceChildren(el('div', { class: 'toast' }, msg));
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { $toastHost.classList.add('hidden'); $toastHost.replaceChildren(); }, 5000);
+}
+
+/* ── Confetti ────────────────────────────────────────────────────────── */
+function launchConfetti() {
+  const canvas = Object.assign(document.createElement('canvas'), {
+    style: 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99',
+  });
+  document.body.append(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  const colours = ['#6b4cff','#ff7a14','#45c26d','#ff5a4f','#fff','#ffd166'];
+  const pieces = Array.from({ length: 90 }, () => ({
+    x: Math.random() * canvas.width, y: Math.random() * -canvas.height / 2,
+    r: Math.random() * 7 + 3,
+    c: colours[Math.floor(Math.random() * colours.length)],
+    vx: (Math.random() - 0.5) * 3, vy: Math.random() * 4 + 1.5,
+    rot: Math.random() * 360, vr: (Math.random() - 0.5) * 8,
+  }));
+  let raf;
+  (function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.06;
+    });
+    if (pieces.some(p => p.y < canvas.height + 10)) raf = requestAnimationFrame(draw);
+    else canvas.remove();
+  })();
+  setTimeout(() => { cancelAnimationFrame(raf); canvas.remove(); }, 4000);
+}
+
+let timer = null, S = null, guard = false, _keyHandler = null;
+window.addEventListener('beforeunload', e => { if (guard) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ──────────────────── HOME ──────────────────────────────────────────── */
+async function home() {
+  clearInterval(timer); guard = false; undock();
+  if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
+  // Skeleton loading state
+  mount(
+    el('div', { class: 'hello' },
+      el('p', {}, 'Weekly quiz'),
+      el('div', { class: 'skel sk-h1' }),
+      el('div', { class: 'skel sk-sub' })),
+    el('div', { 'aria-hidden': 'true' },
+      el('div', { class: 'skel sk-row' }),
+      el('div', { class: 'skel sk-row' })));
+  let weeks;
+  try { weeks = (await api('/api/weeks')).weeks; }
+  catch (e) {
+    mount(
+      el('div', { class: 'hello' }, el('h1', {}, 'Weekly Quiz')),
+      el('div', { class: 'msg err', style: 'margin-top:90px' }, e.message),
+      el('button', { class: 'btn ghost', onclick: home }, 'Try again'));
+    return;
+  }
+  const courseRows = w => w.courses.map(c => el('button', { class: 'row', onclick: () => nameForm(w, c) },
+    el('span', { class: 'dot', style: 'background:' + c.color }),
+    el('span', { class: 't' }, el('b', {}, c.title), el('small', {}, (c.code ? c.code + ' · ' : '') + c.count + ' questions · ' + c.timePerQ + 's each')),
+    el('span', { icon: ICON.chev })));
+  const out = [el('div', { class: 'hello' }, el('p', {}, 'Weekly quiz'), el('h1', {}, 'Pick a quiz and test yourself'))];
+  if (!weeks.length) out.push(el('div', { class: 'msg', style: 'margin-top:90px' }, 'No quizzes are open right now. Check back soon.'));
+  else {
+    out.push(el('div', { class: 'sec first' }, 'This week'));
+    out.push(el('div', { class: 'weekcard' }, el('h3', {}, weeks[0].label, el('span', { class: 'tag' }, 'NEW')), ...courseRows(weeks[0])));
+    if (weeks.length > 1) {
+      out.push(el('div', { class: 'sec', style: 'margin-top:26px' }, 'Past weeks'));
+      weeks.slice(1).forEach(w => out.push(el('details', { class: 'past' },
+        el('summary', {}, el('span', {}, w.label), el('small', {}, w.courses.length + (w.courses.length === 1 ? ' quiz' : ' quizzes'))),
+        el('div', { class: 'in' }, ...courseRows(w)))));
+    }
+  }
+  mount(...out);
+}
+
+/* ──────────────────── NAME FORM ─────────────────────────────────────── */
+function nameForm(week, course) {
+  undock();
+  const name    = el('input', { id: 'nm', autocomplete: 'name', placeholder: 'e.g. Adaeze Okafor', maxlength: 60, value: localStorage.getItem('q_name') || '' });
+  const contact = el('input', { id: 'ct', placeholder: 'Matric number, email or phone', maxlength: 80, value: localStorage.getItem('q_contact') || '' });
+  const go = () => {
+    const n = name.value.trim().replace(/\s+/g, ' ');
+    if (n.length < 2) { name.focus(); name.style.borderColor = 'var(--bad)'; return; }
+    localStorage.setItem('q_name', n); localStorage.setItem('q_contact', contact.value.trim());
+    begin(week, course, n, contact.value.trim());
+  };
+  mount(
+    el('button', { class: 'back', onclick: home }, el('span', { icon: ICON.back }), 'Back'),
+    el('div', { class: 'formcard' },
+      el('h2', {}, course.title),
+      el('p', {}, week.label + ' · ' + course.count + ' questions · ' + course.timePerQ + ' seconds each'),
+      el('label', { for: 'nm' }, 'Full name'), name,
+      el('label', { for: 'ct' }, 'Matric number, email or phone (optional)'), contact,
+      el('p', { class: 'note' }, 'Answers stay hidden until you finish. Each question has a countdown, and when it ends you move on automatically. You cannot go back. Press 1–4 to pick an answer, Enter or Space to advance.')));
+  dock('Start quiz', go);
+  name.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+}
+
+/* ──────────────────── QUIZ ──────────────────────────────────────────── */
+async function begin(week, course, name, contact) {
+  undock(); mount(el('div', { class: 'msg', style: 'margin-top:120px' }, 'Loading questions…'));
+  try {
+    const d  = await api('/api/quiz?week=' + encodeURIComponent(week.id) + '&course=' + encodeURIComponent(course.id));
+    const qs = shuffle(d.questions).map(q => ({ i: q.i, q: q.q, opts: shuffle(q.opts) }));
+    S = { week: d.week, course: d.course, name, contact, qs, idx: 0, ans: {}, t0: Date.now(), tpq: d.course.timePerQ };
+    guard = true; showQ();
+  } catch (e) {
+    mount(el('button', { class: 'back', onclick: home }, el('span', { icon: ICON.back }), 'Back'),
+      el('div', { class: 'msg err', style: 'margin-top:80px' }, e.message));
+  }
+}
+
+const CIRC = 2 * Math.PI * 32;
+function showQ() {
+  clearInterval(timer);
+  if (_keyHandler) document.removeEventListener('keydown', _keyHandler);
+
+  const q = S.qs[S.idx], n = S.qs.length, answered = Object.keys(S.ans).length;
+
+  // Timer ring
+  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); ring.setAttribute('viewBox', '0 0 88 88');
+  const mk = cls => { const x = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); x.setAttribute('class', cls); x.setAttribute('cx', 44); x.setAttribute('cy', 44); x.setAttribute('r', 32); return x; };
+  const fgc = mk('fg'); fgc.setAttribute('stroke-dasharray', CIRC.toFixed(1)); fgc.setAttribute('stroke-dashoffset', '0');
+  ring.append(mk('bg'), fgc);
+
+  const timerEl = el('div', { class: 'timer', role: 'timer', 'aria-label': 'Time remaining', 'aria-live': 'off' });
+  const num = el('b', { 'aria-hidden': 'true' }, S.tpq);
+  timerEl.append(ring, num);
+
+  // Options
+  const optsEl = el('ul', { class: 'opts', role: 'group', 'aria-labelledby': 'qtext' });
+  const refreshDock = () => dock(S.idx === n - 1 ? 'Finish' : 'Next', advance, !(q.i in S.ans));
+
+  const optBtns = [];
+  q.opts.forEach((o, oi) => {
+    const kbdHint = el('span', { class: 'kbd', 'aria-hidden': 'true' }, String(oi + 1));
+    const b = el('button', { class: 'opt', 'aria-pressed': S.ans[q.i] === o ? 'true' : 'false' },
+      el('span', {}, o), kbdHint, el('span', { class: 'c', icon: ICON.check }));
+    b.onclick = () => selectOpt(oi);
+    optBtns.push(b);
+    optsEl.append(el('li', {}, b));
+  });
+
+  function selectOpt(oi) {
+    S.ans[q.i] = q.opts[oi];
+    optBtns.forEach((x, xi) => x.setAttribute('aria-pressed', xi === oi ? 'true' : 'false'));
+    document.getElementById('answeredChip').textContent = pad(Object.keys(S.ans).length) + ' of ' + n;
+    refreshDock();
+  }
+
+  // Keyboard: digits 1-N select options, Enter/Space advances
+  _keyHandler = e => {
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    const digit = parseInt(e.key, 10);
+    if (digit >= 1 && digit <= q.opts.length) { e.preventDefault(); selectOpt(digit - 1); return; }
+    if ((e.key === 'Enter' || e.key === ' ') && q.i in S.ans) { e.preventDefault(); advance(); }
+  };
+  document.addEventListener('keydown', _keyHandler);
+
+  mount(
+    el('div', { class: 'top' },
+      el('span', { class: 'chip dark' }, el('span', { icon: ICON.user, style: 'display:inline-flex' }), pad(S.idx + 1) + ' of ' + n),
+      el('div', { class: 'bar' }, el('i', { style: 'width:' + (S.idx / n * 100) + '%' })),
+      el('span', { class: 'chip org' }, el('span', { icon: ICON.puzzle, style: 'display:inline-flex' }), el('span', { id: 'answeredChip' }, pad(answered) + ' of ' + n))),
+    el('div', { class: 'qcard' },
+      timerEl,
+      el('h2', {}, 'Question ', el('span', {}, pad(S.idx + 1))),
+      el('p', { class: 'sub' }, S.course.title),
+      el('p', { class: 'qtext', id: 'qtext' }, q.q)),
+    optsEl);
+  refreshDock();
+
+  // Timer countdown
+  const deadline = Date.now() + S.tpq * 1000;
+  timer = setInterval(() => {
+    const left = (deadline - Date.now()) / 1000;
+    if (left <= 0) { clearInterval(timer); advance(true); return; }
+    num.textContent = Math.ceil(left);
+    fgc.setAttribute('stroke-dashoffset', (CIRC * (1 - left / S.tpq)).toFixed(1));
+    // Warn when 5 seconds remain
+    timerEl.classList.toggle('warn', left <= 5);
+  }, 100);
+}
+
+function advance() {
+  clearInterval(timer);
+  if (S.idx < S.qs.length - 1) { S.idx++; showQ(); } else submit();
+}
+
+/* ──────────────────── SUBMIT + RESULTS ─────────────────────────────── */
+async function submit() {
+  clearInterval(timer); undock();
+  if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
+  mount(el('div', { class: 'msg', style: 'margin-top:120px' }, 'Marking your quiz…'));
+  const payload = {
+    week: S.week.id, course: S.course.id, name: S.name, contact: S.contact,
+    seconds: (Date.now() - S.t0) / 1000,
+    answers: Object.entries(S.ans).map(([i, a]) => ({ i: +i, a })),
+  };
+  try {
+    const r = await api('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    guard = false; results(r);
+  } catch (e) {
+    mount(el('div', { class: 'msg err', style: 'margin-top:100px' }, 'Could not save your score. Your answers are still here — check your connection and try again.'));
+    showToast(e.message);
+    dock('Retry submit', submit);
+  }
+}
+
+function results(r) {
+  undock();
+  if (r.percent === 100) launchConfetti();
+  const verdict = r.percent >= 90 ? 'Excellent work' : r.percent >= 70 ? 'Good job' : r.percent >= 50 ? 'Getting there' : 'Keep practising';
+  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); ring.setAttribute('viewBox', '0 0 104 104');
+  const mk = cls => { const x = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); x.setAttribute('class', cls); x.setAttribute('cx', 52); x.setAttribute('cy', 52); x.setAttribute('r', 42); return x; };
+  const C2 = 2 * Math.PI * 42, fg = mk('fg'); fg.setAttribute('stroke-dasharray', C2.toFixed(1)); fg.setAttribute('stroke-dashoffset', (C2 * (1 - r.percent / 100)).toFixed(1));
+  ring.append(mk('bg'), fg);
+  let onlyWrong = false;
+  const list = el('div');
+  const draw = () => {
+    list.replaceChildren(...r.review.map((x, i) => ({ x, i })).filter(({ x }) => !onlyWrong || !x.ok).map(({ x, i }) =>
+      el('div', { class: 'rev' },
+        el('div', { class: 'n' }, 'Question ' + (i + 1) + (x.ok ? ' · Correct' : x.yours === null ? ' · No answer' : ' · Wrong')),
+        el('p',  { class: 'q' }, x.q),
+        !x.ok && el('div', { class: 'a no' }, el('i', {}, '✕'), el('span', {}, x.yours === null ? 'You did not answer' : 'You chose: ' + x.yours)),
+        el('div', { class: 'a ok' }, el('i', {}, '✓'), el('span', {}, (x.ok ? 'Your answer: ' : 'Correct answer: ') + x.correct)),
+        x.why && el('p', { class: 'why' }, x.why))));
+  };
+  const toggle = el('input', { type: 'checkbox', style: 'width:auto', onchange: e => { onlyWrong = e.target.checked; draw(); } });
+  draw();
+  mount(
+    el('div', { class: 'top' }, el('span', { class: 'chip dark' }, S.week.label), el('div', { class: 'bar' }, el('i', { style: 'width:100%' })), el('span', { class: 'chip org' }, 'Done')),
+    el('div', { class: 'rcard' },
+      el('div', { class: 'rring', 'aria-hidden': 'true' }, ring, el('b', {}, r.percent + '%')),
+      el('h2', {}, verdict + ', ' + S.name.split(' ')[0]),
+      el('div', { class: 'big', 'aria-label': r.score + ' out of ' + r.total }, String(r.score), el('small', { 'aria-hidden': 'true' }, ' / ' + r.total)),
+      el('p', {}, S.course.title),
+      el('p', { class: 'sent' }, 'Your score has been sent to the admin' + (r.attempt > 1 ? ' (attempt ' + r.attempt + ')' : '') + '.')),
+    el('div', { class: 'revh' }, el('h3', {}, 'Review your answers'), el('label', { class: 'sw', style: 'margin:0' }, toggle, 'Wrong only')),
+    list,
+    el('button', { class: 'btn', style: 'margin-top:8px', onclick: () => { const w = { id: S.week.id, label: S.week.label }; nameForm(w, { id: S.course.id, title: S.course.title, count: S.qs.length, timePerQ: S.tpq }); } }, 'Try again'),
+    el('button', { class: 'btn ghost', onclick: home }, 'All quizzes'));
+}
+
+home();
+
+/* ── Service Worker registration ─────────────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {/* non-fatal */});
+}
+</script>
+</body>
+</html>
