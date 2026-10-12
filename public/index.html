@@ -25,8 +25,6 @@
   --coral-light: rgba(255, 91, 96, 0.12);
   --teal: #10b981;
   --teal-light: rgba(16, 185, 129, 0.12);
-  --amber: #f59e0b;
-  --amber-light: rgba(245, 158, 11, 0.12);
 
   --bg-page: #dce0e8;
   --card-bg: #f8f9fc;
@@ -36,12 +34,10 @@
   --text-muted: #9ba0b8;
   --border-soft: #eef0f6;
   --shadow-soft: 0 10px 30px rgba(25, 27, 46, 0.06);
-  --shadow-float: 0 20px 40px rgba(25, 27, 46, 0.14);
 
-  --radius-screen: 42px;
-  --radius-card: 28px;
+  --radius-screen: 44px;
+  --radius-card: 26px;
   --radius-pill: 999px;
-  --radius-btn: 20px;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -49,7 +45,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #d5d9e3;
+  background: #d4d8e2;
   color: var(--text-dark);
   font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   min-height: 100vh;
@@ -64,7 +60,7 @@ button { cursor: pointer; border: none; background: none; }
 :focus-visible { outline: 2.5px solid var(--coral); outline-offset: 2px; }
 .hidden { display: none !important; }
 
-/* The Mobile Device Frame inspired by Dribbble mockups */
+/* The Mobile Device Screen Frame */
 .phone-viewport {
   width: 100%;
   max-width: 418px;
@@ -75,7 +71,7 @@ button { cursor: pointer; border: none; background: none; }
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 60px rgba(22, 24, 40, 0.18);
+  box-shadow: 0 25px 60px rgba(22, 24, 40, 0.2);
 }
 
 @media (min-width: 480px) {
@@ -88,33 +84,29 @@ button { cursor: pointer; border: none; background: none; }
   }
 }
 
-/* Wave S-Curve Header Geometry */
-.mody-header {
-  background: var(--navy);
-  color: var(--white);
-  padding: 40px 24px 44px;
+/* =====================================================================
+   EXACT MODYCHAT ASYMMETRICAL S-CURVE TOP
+   ===================================================================== */
+.mody-top-container {
   position: relative;
+  background: var(--navy);
+  color: #fff;
   z-index: 2;
+  padding-bottom: 52px; /* space for the S-curve swoop */
 }
 
-.mody-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -36px;
-  height: 38px;
-  background: var(--navy);
-  border-bottom-left-radius: 40px;
-  border-bottom-right-radius: 40px;
-  z-index: 1;
+/* Header interior controls */
+.mody-inner-header {
+  padding: 40px 22px 14px;
+  position: relative;
+  z-index: 3;
 }
 
 .mody-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .mody-brand {
@@ -132,12 +124,13 @@ button { cursor: pointer; border: none; background: none; }
   display: grid;
   place-items: center;
   color: #fff;
+  font-size: 15px;
 }
 
-/* Pill Navigation Switcher (Chats / Status / Calls equivalent) */
+/* Modychat Pill Switcher (Chats / Status / Calls) */
 .pill-switcher {
   display: flex;
-  background: rgba(0, 0, 0, 0.22);
+  background: rgba(0, 0, 0, 0.24);
   border-radius: var(--radius-pill);
   padding: 4px;
   gap: 4px;
@@ -157,24 +150,49 @@ button { cursor: pointer; border: none; background: none; }
 .pill-tab.active {
   background: var(--navy-light);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
 }
 
-/* Body Content Area */
+/* THE EXACT MODYCHAT DUAL-REVERSE SVG S-CURVE
+   Drops deep on the left (creating the convex navy tab),
+   reverses smoothly into the high concave swoop on the right. */
+.mody-scurve-divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 54px;
+  overflow: hidden;
+  line-height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mody-scurve-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* =====================================================================
+   BODY CONTENT AREA (LIGHT CARD BACKGROUND)
+   ===================================================================== */
 .content-area {
   flex: 1;
-  padding: 46px 22px 100px;
+  padding: 16px 20px 100px;
   overflow-y: auto;
   position: relative;
-  z-index: 3;
+  z-index: 1;
 }
 
-/* Content Headings */
+/* Section Headline */
 .section-headline {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  padding: 0 4px;
 }
 
 .section-headline h2 {
@@ -188,13 +206,13 @@ button { cursor: pointer; border: none; background: none; }
 .section-headline span {
   font-size: 12.5px;
   color: var(--text-sub);
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* Human-friendly Card Rows (Like Modychat contact cards) */
+/* Contact / Quiz Cards */
 .quiz-card {
   background: var(--white);
-  border-radius: 22px;
+  border-radius: 24px;
   padding: 16px 18px;
   margin-bottom: 12px;
   display: flex;
@@ -209,7 +227,7 @@ button { cursor: pointer; border: none; background: none; }
 
 .quiz-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(25, 27, 46, 0.09);
+  box-shadow: 0 12px 28px rgba(25, 27, 46, 0.09);
 }
 
 .avatar-badge {
@@ -258,23 +276,25 @@ button { cursor: pointer; border: none; background: none; }
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  font-weight: 700;
 }
 
-/* Floating Action Button (FAB) from Modychat */
+/* Floating Action Button (FAB) from Modychat (bottom right coral button) */
 .coral-fab {
   position: absolute;
   right: 22px;
-  bottom: 26px;
-  width: 54px;
-  height: 54px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
   border-radius: 20px;
   background: var(--coral);
   color: #fff;
   display: grid;
   place-items: center;
-  box-shadow: 0 12px 24px rgba(255, 91, 96, 0.38);
+  box-shadow: 0 12px 26px rgba(255, 91, 96, 0.38);
   z-index: 10;
   transition: transform 0.2s ease;
+  font-size: 20px;
 }
 
 .coral-fab:hover { transform: scale(1.06); }
@@ -285,7 +305,7 @@ button { cursor: pointer; border: none; background: none; }
   border-radius: var(--radius-card);
   padding: 26px 22px;
   box-shadow: var(--shadow-soft);
-  margin-bottom: 20px;
+  margin-top: 6px;
 }
 
 .reg-card h3 {
@@ -353,6 +373,7 @@ button { cursor: pointer; border: none; background: none; }
   background: var(--coral-hover);
   transform: translateY(-1px);
 }
+
 .btn-coral:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -370,31 +391,20 @@ button { cursor: pointer; border: none; background: none; }
   margin-top: 8px;
 }
 
-/* Active Question Arena (Header wave + Option Cards) */
+/* Active Question Arena */
 .q-arena-header {
+  position: relative;
   background: var(--navy);
   color: #fff;
-  padding: 32px 24px 50px;
-  position: relative;
-}
-
-.q-arena-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -32px;
-  height: 34px;
-  background: var(--navy);
-  border-bottom-left-radius: 36px;
-  border-bottom-right-radius: 36px;
+  padding: 36px 22px 52px;
+  z-index: 2;
 }
 
 .q-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .timer-pill-coral {
@@ -436,7 +446,7 @@ button { cursor: pointer; border: none; background: none; }
   color: #fff;
 }
 
-/* Segmented Progress Tracker from Quizly screen */
+/* Segmented progress */
 .segment-bar {
   display: flex;
   gap: 5px;
@@ -453,12 +463,12 @@ button { cursor: pointer; border: none; background: none; }
 
 .segment-item.filled { background: var(--coral); }
 
-/* Option Cards (Crisp White rounded with A, B, C tags) */
+/* Option Cards */
 .options-wrap {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 6px;
 }
 
 .mody-opt-card {
@@ -512,7 +522,7 @@ button { cursor: pointer; border: none; background: none; }
   flex: 1;
 }
 
-/* Results Screen with Trophy / Ring */
+/* Results Screen */
 .results-card {
   background: var(--white);
   border-radius: var(--radius-card);
@@ -640,7 +650,7 @@ button { cursor: pointer; border: none; background: none; }
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: var(--shadow-float);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
   z-index: 100;
   animation: slideDown 0.25s ease;
 }
@@ -676,6 +686,22 @@ function el(tag, props, ...kids) {
     n.append(c.nodeType ? c : document.createTextNode(c));
   }
   return n;
+}
+
+/* Helper to render the exact Modychat curved SVG divider */
+function createModyCurveSvg() {
+  const div = el('div', { class: 'mody-scurve-divider' });
+  div.innerHTML = `
+    <svg viewBox="0 0 418 54" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 
+        Exact Modychat Asymmetric Wave:
+        Starts low at y=54 on left, swoops up smoothly to y=0 on right.
+        Filled with #f8f9fc (the background of the content area).
+      -->
+      <path d="M0,54 C130,54 210,0 418,0 L418,54 L0,54 Z" fill="#f8f9fc" />
+    </svg>
+  `;
+  return div;
 }
 
 function shuffle(a) {
@@ -759,23 +785,26 @@ async function home() {
   guard = false;
   if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
 
-  // Header inspired by Modychat's navy wave & top pills
-  const header = el('div', { class: 'mody-header' },
-    el('div', { class: 'mody-topbar' },
-      el('span', { class: 'mody-brand' }, 'Weekly Quiz'),
-      el('div', { class: 'header-icon-btn' }, '🔔')),
-    el('div', { class: 'pill-switcher' },
-      el('button', { class: 'pill-tab active' }, 'Current Quiz'),
-      el('button', { class: 'pill-tab' }, 'Past Archive')));
+  // Header with exact Modychat asymmetric S-curve
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('div', { class: 'mody-topbar' },
+        el('span', { class: 'mody-brand' }, 'Modychat Quiz'),
+        el('div', { class: 'header-icon-btn' }, '🔍')),
+      el('div', { class: 'pill-switcher' },
+        el('button', { class: 'pill-tab active' }, 'Chats / Quizzes'),
+        el('button', { class: 'pill-tab' }, 'Archive'),
+        el('button', { class: 'pill-tab' }, 'Results'))),
+    createModyCurveSvg());
 
-  mount(header, el('div', { class: 'content-area' },
+  mount(topContainer, el('div', { class: 'content-area' },
     el('div', { style: 'text-align:center;padding:40px 0;color:var(--text-sub)' }, 'Loading quizzes…')));
 
   let weeks;
   try {
     weeks = (await api('/api/weeks')).weeks;
   } catch (e) {
-    mount(header, el('div', { class: 'content-area' },
+    mount(topContainer, el('div', { class: 'content-area' },
       el('div', { class: 'reg-card' },
         el('h3', {}, 'Connection Error'),
         el('p', {}, e.message),
@@ -793,7 +822,7 @@ async function home() {
         el('div', { class: 'quiz-card-sub' },
           el('span', {}, c.count + ' Questions'),
           el('span', {}, '•'),
-          el('span', {}, c.timePerQ + 's / Q'))),
+          el('span', {}, c.timePerQ + 's each'))),
       el('div', { class: 'quiz-action-pill' }, '→'));
   });
 
@@ -806,31 +835,44 @@ async function home() {
   } else {
     contentArea.append(
       el('div', { class: 'section-headline' },
-        el('h2', {}, weeks[0].label),
-        el('span', {}, 'Active Now')),
+        el('h2', {}, 'All Chats / ' + weeks[0].label),
+        el('span', {}, 'See more >')),
       ...renderQuizCards(weeks[0]));
 
     if (weeks.length > 1) {
       contentArea.append(
         el('div', { class: 'section-headline', style: 'margin-top:28px' },
-          el('h2', {}, 'Past Weeks'),
-          el('span', {}, 'Self-practice')),
+          el('h2', {}, 'Group Archive'),
+          el('span', {}, 'See more >')),
         ...weeks.slice(1).flatMap(w => renderQuizCards(w)));
     }
   }
 
-  mount(header, contentArea);
+  // Floating Action Button from Modychat
+  const fab = el('button', {
+    class: 'coral-fab',
+    'aria-label': 'Start quiz',
+    onclick: () => {
+      if (weeks.length && weeks[0].courses.length) {
+        nameForm(weeks[0], weeks[0].courses[0]);
+      }
+    }
+  }, '✉');
+
+  mount(topContainer, contentArea, fab);
 }
 
 /* ──────────────────── REGISTRATION FORM ────────────────────────────── */
 function nameForm(week, course) {
-  const header = el('div', { class: 'mody-header' },
-    el('div', { class: 'mody-topbar' },
-      el('button', { class: 'header-icon-btn', onclick: home }, '←'),
-      el('span', { class: 'mody-brand' }, 'Registration'),
-      el('div', { style: 'width:38px' })),
-    el('div', { style: 'font-size:14px;color:rgba(255,255,255,0.7);margin-top:-8px' },
-      course.title));
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('div', { class: 'mody-topbar' },
+        el('button', { class: 'header-icon-btn', onclick: home }, '←'),
+        el('span', { class: 'mody-brand' }, 'Registration'),
+        el('div', { style: 'width:38px' })),
+      el('div', { style: 'font-size:14px;color:rgba(255,255,255,0.7);margin-top:-8px' },
+        course.title)),
+    createModyCurveSvg());
 
   const nameInput = el('input', {
     id: 'nm',
@@ -858,9 +900,9 @@ function nameForm(week, course) {
     begin(week, course, n, contactInput.value.trim());
   };
 
-  const formCard = el('div', { class: 'reg-card', style: 'margin-top:14px' },
+  const formCard = el('div', { class: 'reg-card' },
     el('h3', {}, 'Candidate Details'),
-    el('p', {}, 'Enter your details before starting the timed quiz. Questions cannot be skipped or revised once submitted.'),
+    el('p', {}, 'Enter your name to begin. Each question progresses automatically when the countdown expires.'),
     el('div', { class: 'input-group' },
       el('label', { for: 'nm' }, 'FULL NAME *'),
       nameInput),
@@ -871,14 +913,17 @@ function nameForm(week, course) {
 
   nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
 
-  mount(header, el('div', { class: 'content-area' }, formCard));
+  mount(topContainer, el('div', { class: 'content-area' }, formCard));
 }
 
-/* ──────────────────── ACTIVE QUIZ ENGINE ───────────────────────────── */
+/* ──────────────────── ACTIVE QUIZ ARENA ────────────────────────────── */
 async function begin(week, course, name, contact) {
-  const header = el('div', { class: 'mody-header' },
-    el('span', { class: 'mody-brand' }, 'Loading Exam…'));
-  mount(header, el('div', { class: 'content-area' },
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('span', { class: 'mody-brand' }, 'Loading Exam…')),
+    createModyCurveSvg());
+
+  mount(topContainer, el('div', { class: 'content-area' },
     el('div', { class: 'reg-card', style: 'text-align:center' }, 'Fetching test questions…')));
 
   try {
@@ -904,20 +949,20 @@ function showQ() {
     el('span', {}, '⏳'),
     el('span', { id: 'timerNum' }, S.tpq + 's'));
 
-  // Segment progress bar (like Quizly reference)
   const segments = Array.from({ length: n }, (_, i) =>
     el('div', { class: 'segment-item ' + (i <= S.idx ? 'filled' : '') }));
 
-  const header = el('div', { class: 'q-arena-header' },
-    el('div', { class: 'q-nav' },
-      el('span', { class: 'q-counter' }, 'Question ' + pad(S.idx + 1) + ' of ' + pad(n)),
-      timerPill),
-    el('h2', { class: 'question-title' }, q.q),
-    el('div', { class: 'segment-bar' }, ...segments));
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('div', { class: 'q-nav' },
+        el('span', { class: 'q-counter' }, 'Question ' + pad(S.idx + 1) + ' of ' + pad(n)),
+        timerPill),
+      el('h2', { class: 'question-title' }, q.q),
+      el('div', { class: 'segment-bar' }, ...segments)),
+    createModyCurveSvg());
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
   const optCards = [];
-
   const optsWrap = el('div', { class: 'options-wrap' });
 
   q.opts.forEach((o, oi) => {
@@ -936,7 +981,7 @@ function showQ() {
 
   const nextBtn = el('button', {
     class: 'btn-coral',
-    style: 'margin-top:24px',
+    style: 'margin-top:22px',
     disabled: !(q.i in S.ans),
     onclick: () => advance()
   }, S.idx === n - 1 ? 'Finish & Submit' : 'Next Question →');
@@ -947,7 +992,6 @@ function showQ() {
     nextBtn.disabled = false;
   }
 
-  // Keyboard navigation support
   _keyHandler = e => {
     const digit = parseInt(e.key, 10);
     if (digit >= 1 && digit <= q.opts.length) {
@@ -963,7 +1007,7 @@ function showQ() {
   };
   document.addEventListener('keydown', _keyHandler);
 
-  mount(header, el('div', { class: 'content-area' }, optsWrap, nextBtn));
+  mount(topContainer, el('div', { class: 'content-area' }, optsWrap, nextBtn));
 
   const deadline = Date.now() + S.tpq * 1000;
   const numNode = document.getElementById('timerNum');
@@ -996,9 +1040,12 @@ async function submit() {
   clearInterval(timer);
   if (_keyHandler) { document.removeEventListener('keydown', _keyHandler); _keyHandler = null; }
 
-  const header = el('div', { class: 'mody-header' },
-    el('span', { class: 'mody-brand' }, 'Submitting Assessment'));
-  mount(header, el('div', { class: 'content-area' },
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('span', { class: 'mody-brand' }, 'Submitting Assessment')),
+    createModyCurveSvg());
+
+  mount(topContainer, el('div', { class: 'content-area' },
     el('div', { class: 'reg-card', style: 'text-align:center' }, 'Grading your answers…')));
 
   const payload = {
@@ -1020,7 +1067,7 @@ async function submit() {
     results(r);
   } catch (e) {
     showToast(e.message);
-    mount(header, el('div', { class: 'content-area' },
+    mount(topContainer, el('div', { class: 'content-area' },
       el('div', { class: 'reg-card' },
         el('h3', {}, 'Submission Error'),
         el('p', {}, e.message),
@@ -1032,11 +1079,13 @@ function results(r) {
   if (r.percent === 100) launchConfetti();
 
   const verdict = r.percent >= 80 ? 'Great Job!' : r.percent >= 50 ? 'Good Effort!' : 'Keep Practicing!';
-  const header = el('div', { class: 'mody-header' },
-    el('div', { class: 'mody-topbar' },
-      el('button', { class: 'header-icon-btn', onclick: home }, '✕'),
-      el('span', { class: 'mody-brand' }, 'Assessment Report'),
-      el('div', { style: 'width:38px' })));
+  const topContainer = el('div', { class: 'mody-top-container' },
+    el('div', { class: 'mody-inner-header' },
+      el('div', { class: 'mody-topbar' },
+        el('button', { class: 'header-icon-btn', onclick: home }, '✕'),
+        el('span', { class: 'mody-brand' }, 'Assessment Report'),
+        el('div', { style: 'width:38px' }))),
+    createModyCurveSvg());
 
   const reviewList = el('div');
   r.review.forEach((x, i) => {
@@ -1072,7 +1121,7 @@ function results(r) {
     }, 'Retake Quiz'),
     el('button', { class: 'btn-ghost-dark', onclick: home }, 'Back to All Quizzes'));
 
-  mount(header, el('div', { class: 'content-area' }, card, reviewList));
+  mount(topContainer, el('div', { class: 'content-area' }, card, reviewList));
 }
 
 home();
