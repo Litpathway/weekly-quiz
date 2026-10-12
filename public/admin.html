@@ -4,895 +4,255 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Quiz Admin — Dashboard</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
+<title>Quiz Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy: #191b2e;
-  --navy-dark: #121324;
-  --navy-light: #262940;
-  --coral: #ff5b60;
-  --coral-hover: #ff474d;
-  --coral-light: rgba(255, 91, 96, 0.12);
-  --teal: #10b981;
-  --teal-light: rgba(16, 185, 129, 0.12);
-
-  --bg-page: #f0f2f7;
-  --card-bg: #ffffff;
-  --text-dark: #161828;
-  --text-sub: #787d94;
-  --text-muted: #9ba0b8;
-  --border-soft: #e7eaf3;
-  --shadow-soft: 0 8px 24px rgba(25, 27, 46, 0.05);
-
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg-page);
-  color: var(--text-dark);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  -webkit-font-smoothing: antialiased;
-}
-
-button, input, select, textarea { font: inherit; color: inherit; }
-button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
-.hidden { display: none !important; }
-
-/* Header with curved Modychat aesthetics */
-.admin-header {
-  background: var(--navy);
-  color: #fff;
-  padding: 24px 32px 36px;
-  border-bottom-left-radius: 36px;
-  border-bottom-right-radius: 36px;
-  box-shadow: 0 12px 30px rgba(25, 27, 46, 0.15);
-}
-
-.header-top {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand-label {
-  font-family: 'Outfit', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-badge {
-  background: var(--coral);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-
-.nav-btns {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-header {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-
-.btn-header:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* Page Frame */
-.wrap {
-  max-width: 1100px;
-  margin: -16px auto 60px;
-  padding: 0 24px;
-  position: relative;
-  z-index: 5;
-}
-
-/* Auth Card */
-.login-wrap {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 0 20px;
-}
-
-.login-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  padding: 32px 28px;
-  box-shadow: 0 16px 40px rgba(25, 27, 46, 0.1);
-  border: 1px solid var(--border-soft);
-}
-
-.login-card h2 {
-  font-family: 'Outfit', sans-serif;
-  margin: 0 0 6px;
-  font-size: 22px;
-}
-
-.login-card p {
-  color: var(--text-sub);
-  margin: 0 0 24px;
-  font-size: 13.5px;
-}
-
-/* Form Controls */
-input, select, textarea {
-  width: 100%;
-  background: #f8f9fd;
-  border: 1.5px solid var(--border-soft);
-  border-radius: 14px;
-  padding: 12px 14px;
-  font-size: 14px;
-  color: var(--text-dark);
-  transition: all 0.2s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-  background: #fff;
-  border-color: var(--coral);
-  outline: none;
-  box-shadow: 0 0 0 4px var(--coral-light);
-}
-
-textarea {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-  min-height: 220px;
-}
-
-/* Buttons */
-.btn-coral {
-  background: var(--coral);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 11px 20px;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  box-shadow: 0 8px 18px rgba(255, 91, 96, 0.25);
-  transition: all 0.2s ease;
-}
-
-.btn-coral:hover {
-  background: var(--coral-hover);
-  transform: translateY(-1px);
-}
-.btn-coral:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-soft {
-  background: #edf0f7;
-  color: var(--text-dark);
-  border: none;
-  border-radius: 12px;
-  padding: 9px 16px;
-  font-weight: 600;
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-.btn-soft:hover { background: #e2e6f2; }
-
-.btn-del {
-  background: #fff;
-  color: var(--coral);
-  border: 1.5px solid #fed7d7;
-  padding: 5px 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 12px;
-}
-.btn-del:hover {
-  background: #fff5f5;
-  border-color: var(--coral);
-}
-
-/* Navigation Switcher Pills */
-.admin-tabs {
-  display: flex;
-  background: #e4e7f0;
-  border-radius: 999px;
-  padding: 5px;
-  gap: 5px;
-  margin-bottom: 24px;
-  max-width: 320px;
-}
-
-.admin-tab {
-  flex: 1;
-  text-align: center;
-  padding: 9px 16px;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 999px;
-  color: var(--text-sub);
-  border: none;
-  background: transparent;
-  transition: all 0.2s ease;
-}
-
-.admin-tab[aria-selected="true"] {
-  background: #fff;
-  color: var(--navy);
-  box-shadow: 0 4px 12px rgba(25, 27, 46, 0.08);
-}
-
-/* Metric Cards */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-box {
-  background: #fff;
-  border-radius: var(--radius-md);
-  padding: 20px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-soft);
-}
-
-.stat-box .title {
-  color: var(--text-sub);
-  font-size: 12.5px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.stat-box .num {
-  font-family: 'Outfit', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--navy);
-}
-
-/* Filters & Table */
-.toolbar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.action-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.table-card {
-  background: #fff;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
-  overflow: hidden;
-  border: 1px solid var(--border-soft);
-}
-
-.table-scroll {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 760px;
-}
-
-th, td {
-  padding: 13px 18px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-soft);
-  white-space: nowrap;
-}
-
-th {
-  background: #fbfbfe;
-  color: var(--text-sub);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  user-select: none;
-}
-
-tbody tr:hover { background: #fafbff; }
-tr:last-child td { border-bottom: none; }
-
-.score-badge {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 800;
-  font-size: 13px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  display: inline-block;
-}
-.score-badge.hi { background: var(--teal-light); color: var(--teal); }
-.score-badge.mid { background: rgba(245, 158, 11, 0.12); color: #d97706; }
-.score-badge.lo { background: var(--coral-light); color: var(--coral); }
-
-/* Week Cards */
-.module-card {
-  background: #fff;
-  border-radius: var(--radius-md);
-  padding: 22px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-soft);
-}
-
-.module-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.module-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.state-chip {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 8px;
-}
-.state-chip.active { background: var(--coral-light); color: var(--coral); }
-.state-chip.closed { background: #edf0f7; color: var(--text-sub); }
-
-.module-meta {
-  color: var(--text-sub);
-  font-size: 13px;
-  margin-bottom: 16px;
-}
-
-.module-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* Modal */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(22, 24, 40, 0.6);
-  backdrop-filter: blur(4px);
-  display: grid;
-  place-items: center;
-  z-index: 200;
-  padding: 20px;
-}
-
-.modal-box {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  padding: 26px;
-  max-width: 380px;
-  width: 100%;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-.modal-box h4 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px;
-  margin: 0 0 8px;
-}
-
-.modal-box p {
-  color: var(--text-sub);
-  font-size: 13.5px;
-  margin: 0 0 20px;
-  line-height: 1.45;
-}
-
-.modal-btns {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-@media (max-width: 640px) {
-  .stats-grid { grid-template-columns: 1fr; }
-  .toolbar { grid-template-columns: 1fr; }
-}
+:root{--purple:#6b4cff;--bg:#141416;--panel:#232326;--line:#3a3a40;--orange:#ff7a14;--muted:#a8a6bd;--good:#45c26d;--bad:#ff5a4f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.hidden{display:none!important}
+header{background:var(--purple);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header h1{margin:0;font-size:19px}
+header button{background:rgba(0,0,0,.28);border:none;border-radius:10px;padding:8px 14px;font-weight:600}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+.login{max-width:380px;margin:80px auto;padding:0 16px}
+.login .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.login h2{margin:0 0 4px}.login p{margin:0 0 16px;color:var(--muted)}
+input,select,textarea{width:100%;background:#1a1a1d;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px}
+input:focus,select:focus,textarea:focus{border-color:var(--orange);outline:none}
+.btn{background:var(--orange);color:#111;border:none;border-radius:10px;padding:11px 18px;font-weight:700}
+.btn.sec{background:transparent;color:#fff;border:1px solid var(--line);font-weight:600}
+.btn.del{background:transparent;color:var(--bad);border:1px solid #5a2b28;font-weight:600;padding:6px 10px;font-size:12.5px}
+.btn:disabled{opacity:.5}
+.err{color:var(--bad);margin-top:10px}.ok{color:var(--good);margin-top:10px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-weight:600}
+.tab[aria-selected=true]{background:var(--orange);border-color:var(--orange);color:#111}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12.5px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;justify-content:space-between}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;user-select:none;background:#1d1d20;position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+td small{display:block;color:var(--muted)}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-weight:700;font-size:12.5px}
+.hi{background:#173d27;color:var(--good)}.mid{background:#3d3217;color:#f2c14e}.lo{background:#3d1b19;color:var(--bad)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}.card .meta{color:var(--muted);font-size:13px;margin-bottom:10px}
+.card .acts{display:flex;gap:8px;flex-wrap:wrap}
+textarea{min-height:260px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+label{display:block;margin:12px 0 6px;font-weight:500;color:#d8d4f5}
+.help{color:var(--muted);font-size:13px;line-height:1.55}
+a{color:#b9a8ff}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:20px}}
 </style>
 </head>
 <body>
-
-<div id="login" class="login-wrap">
-  <div class="login-card">
-    <h2>Instructor Dashboard</h2>
-    <p>Sign in with your admin master password to monitor student submissions and publish weekly modules.</p>
-    <div style="margin-bottom:14px">
-      <input id="pw" type="password" placeholder="Admin password" autocomplete="current-password">
-    </div>
-    <button class="btn-coral" id="loginBtn" style="width:100%">Sign In →</button>
-    <div id="loginErr" style="color:var(--coral);margin-top:10px;font-size:13px;font-weight:600" role="alert"></div>
+<div id="login" class="login">
+  <div class="box">
+    <h2>Quiz admin</h2><p>Enter the admin password to see scores.</p>
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+    <div style="margin-top:14px"><button class="btn" id="loginBtn" style="width:100%">Sign in</button></div>
+    <div id="loginErr" class="err"></div>
   </div>
 </div>
 
 <div id="app" class="hidden">
-  <header class="admin-header">
-    <div class="header-top">
-      <div class="brand-label">
-        Weekly Quiz
-        <span class="brand-badge">Admin</span>
-      </div>
-      <div class="nav-btns">
-        <button class="btn-header" id="refresh">Refresh</button>
-        <button class="btn-header" id="logout">Sign out</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div class="admin-tabs" role="tablist">
-      <button class="admin-tab" role="tab" id="tScores" aria-selected="true">Student Scores</button>
-      <button class="admin-tab" role="tab" id="tWeeks" aria-selected="false">Quiz Weeks</button>
+  <header><h1>Quiz admin</h1><div><button id="refresh">Refresh</button> <button id="logout">Sign out</button></div></header>
+  <div class="wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tScores" aria-selected="true">Scores</button>
+      <button class="tab" role="tab" id="tWeeks" aria-selected="false">Weeks</button>
     </div>
 
-    <!-- Scores Screen -->
-    <section id="scores" role="tabpanel">
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="title">Total Submissions</div>
-          <div class="num" id="sAttempts">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="title">Unique Students</div>
-          <div class="num" id="sPeople">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="title">Average Score</div>
-          <div class="num" id="sAvg">0%</div>
-        </div>
+    <section id="scores">
+      <div class="stats">
+        <div class="stat"><b id="sAttempts">0</b><span>Attempts</span></div>
+        <div class="stat"><b id="sPeople">0</b><span>People</span></div>
+        <div class="stat"><b id="sAvg">0%</b><span>Average</span></div>
       </div>
-
-      <div class="toolbar">
-        <select id="fWeek"></select>
-        <select id="fCourse"></select>
-        <select id="fMode">
+      <div class="filters">
+        <select id="fWeek" aria-label="Week"></select>
+        <select id="fCourse" aria-label="Quiz"></select>
+        <select id="fMode" aria-label="Attempts">
           <option value="all">All attempts</option>
           <option value="first">First attempts only</option>
-          <option value="best">Highest attempt per student</option>
+          <option value="best">Best attempt per person</option>
         </select>
-        <input id="fSearch" placeholder="Search by student name or contact…">
+        <input id="fSearch" placeholder="Search name or contact" aria-label="Search">
       </div>
-
-      <div class="action-bar">
-        <span style="font-size:13px;color:var(--text-sub);font-weight:600" id="count"></span>
-        <button class="btn-soft" id="csv">Download CSV</button>
-      </div>
-
-      <div class="table-card">
-        <div class="table-scroll">
-          <table>
-            <thead><tr id="thead"></tr></thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="bar"><span class="help" id="count"></span><button class="btn sec" id="csv">Download CSV</button></div>
+      <div class="tw"><table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
     </section>
 
-    <!-- Weeks Setup Screen -->
-    <section id="weeks" class="hidden" role="tabpanel">
+    <section id="weeks" class="hidden">
       <div id="weekList"></div>
-
-      <div class="module-card" style="margin-top:20px">
-        <h3 style="font-family:Outfit,sans-serif;font-size:18px;margin:0 0 6px">Add New Quiz Week</h3>
-        <p style="color:var(--text-sub);font-size:13px;margin:0 0 16px">
-          Paste the JSON generated from course materials to make a new quiz session available to students.
-        </p>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:6px">WEEK LABEL</label>
-          <input id="wLabel" placeholder="e.g. Week 3 (26 Oct)">
+      <div class="card">
+        <h3>Add a new week</h3>
+        <p class="help">Each week is a set of quizzes. Old weeks stay open for newcomers until you close them. To make questions: upload the new PDFs to Claude, ask for "this week's quiz in the admin JSON format", then paste the result below.</p>
+        <label for="wLabel">Week label</label>
+        <input id="wLabel" placeholder="e.g. Week 2 (19 Oct)">
+        <label for="wJson">Quiz JSON</label>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+          <label class="btn sec" for="wFile" style="margin:0;display:inline-block;cursor:pointer">Choose JSON file</label>
+          <input id="wFile" type="file" accept=".json,application/json,text/plain" style="display:none">
+          <span class="help" id="wFileName">or paste below</span>
         </div>
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:6px">QUIZ QUESTIONS (JSON)</label>
-          <textarea id="wJson" spellcheck="false" placeholder="[ { &quot;title&quot;: &quot;Course Title&quot;, &quot;questions&quot;: [...] } ]"></textarea>
-          <div id="wMsg" style="font-size:13px;margin-top:6px;font-weight:600"></div>
+        <textarea id="wJson" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Paste the JSON here"></textarea>
+        <div class="acts" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn" id="wCreate">Publish week</button>
+          <button class="btn sec" id="wTemplate">Insert example format</button>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-coral" id="wCreate">Publish Week</button>
-          <button class="btn-soft" id="wTemplate">Insert Sample Template</button>
-        </div>
+        <div id="wMsg"></div>
       </div>
     </section>
-  </main>
-</div>
-
-<!-- Modal Confirmation -->
-<div id="modalBackdrop" class="modal-backdrop hidden">
-  <div class="modal-box">
-    <h4 id="modalMsg">Confirm Action</h4>
-    <p id="modalSub">Are you sure you want to proceed?</p>
-    <div class="modal-btns">
-      <button class="btn-soft" id="modalCancel">Cancel</button>
-      <button class="btn-del" id="modalConfirm">Delete</button>
-    </div>
   </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-let PW = sessionStorage.getItem('adminpw') || '',
-    DATA = { weeks: [], results: [] },
-    sort = { k: 'at', dir: -1 };
+let PW = sessionStorage.getItem('adminpw') || '', DATA = { weeks: [], results: [] }, sort = { k: 'at', dir: -1 };
 
 function el(tag, props, ...kids) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(props || {})) {
-    if (k === 'class') n.className = v;
-    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
-    else if (v != null && v !== false) n.setAttribute(k, v);
+    if (k === 'class') n.className = v; else if (k.startsWith('on')) n.addEventListener(k.slice(2), v); else if (v != null && v !== false) n.setAttribute(k, v);
   }
-  for (const c of kids.flat()) {
-    if (c == null || c === false) continue;
-    n.append(c.nodeType ? c : document.createTextNode(c));
-  }
+  for (const c of kids.flat()) { if (c == null || c === false) continue; n.append(c.nodeType ? c : document.createTextNode(c)); }
   return n;
 }
-
 async function call(method, body) {
-  const r = await fetch('/api/admin', {
-    method,
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': PW },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  let j = {};
-  try { j = await r.json(); } catch {}
-  if (r.status === 401) { signOut('Incorrect password'); throw new Error('Incorrect password'); }
-  if (!r.ok) throw new Error(j.error || 'Server error ' + r.status);
+  const r = await fetch('/api/admin', { method, headers: { 'Content-Type': 'application/json', 'x-admin-password': PW }, body: body ? JSON.stringify(body) : undefined });
+  let j = {}; try { j = await r.json(); } catch {}
+  if (r.status === 401) { signOut('Wrong password'); throw new Error('Wrong password'); }
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
   return j;
 }
-
-function signOut(msg) {
-  sessionStorage.removeItem('adminpw');
-  PW = '';
-  $('app').classList.add('hidden');
-  $('login').classList.remove('hidden');
-  $('loginErr').textContent = msg || '';
-}
-
+function signOut(msg) { sessionStorage.removeItem('adminpw'); PW = ''; $('app').classList.add('hidden'); $('login').classList.remove('hidden'); $('loginErr').textContent = msg || ''; }
 async function load() {
   DATA = await call('GET');
-  $('login').classList.add('hidden');
-  $('app').classList.remove('hidden');
-  fillFilters();
-  renderScores();
-  renderWeeks();
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  fillFilters(); renderScores(); renderWeeks();
 }
-
 $('loginBtn').onclick = async () => {
-  PW = $('pw').value;
-  $('loginErr').textContent = '';
-  $('loginBtn').disabled = true;
-  $('loginBtn').textContent = 'Signing in…';
-  try {
-    await load();
-    sessionStorage.setItem('adminpw', PW);
-  } catch (e) {
-    $('loginErr').textContent = e.message;
-  } finally {
-    $('loginBtn').disabled = false;
-    $('loginBtn').textContent = 'Sign In →';
-  }
+  PW = $('pw').value; $('loginErr').textContent = '';
+  try { await load(); sessionStorage.setItem('adminpw', PW); } catch (e) { $('loginErr').textContent = e.message; }
 };
 $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
 $('logout').onclick = () => signOut('');
-
-$('refresh').onclick = async () => {
-  $('refresh').disabled = true;
-  try { await load(); } catch (e) { alert(e.message); }
-  finally { $('refresh').disabled = false; }
-};
-
+$('refresh').onclick = () => load().catch(e => alert(e.message));
 $('tScores').onclick = () => tab('scores');
 $('tWeeks').onclick = () => tab('weeks');
 function tab(t) {
-  $('scores').classList.toggle('hidden', t !== 'scores');
-  $('weeks').classList.toggle('hidden', t !== 'weeks');
-  $('tScores').setAttribute('aria-selected', t === 'scores');
-  $('tWeeks').setAttribute('aria-selected', t === 'weeks');
+  $('scores').classList.toggle('hidden', t !== 'scores'); $('weeks').classList.toggle('hidden', t !== 'weeks');
+  $('tScores').setAttribute('aria-selected', t === 'scores'); $('tWeeks').setAttribute('aria-selected', t === 'weeks');
 }
 
-let _modalResolve;
-function confirm_(title, sub) {
-  return new Promise(resolve => {
-    _modalResolve = resolve;
-    $('modalMsg').textContent = title;
-    $('modalSub').textContent = sub || '';
-    $('modalBackdrop').classList.remove('hidden');
-  });
-}
-$('modalCancel').onclick = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(false); };
-$('modalConfirm').onclick = () => { $('modalBackdrop').classList.add('hidden'); _modalResolve && _modalResolve(true); };
-
+/* ---- scores ---- */
 function fillFilters() {
   const cur = $('fWeek').value;
-  $('fWeek').replaceChildren(
-    el('option', { value: '' }, 'All Weeks'),
-    ...DATA.weeks.map(w => el('option', { value: w.id }, w.label + (w.open === false ? ' (Closed)' : '')))
-  );
+  $('fWeek').replaceChildren(el('option', { value: '' }, 'All weeks'), ...DATA.weeks.map(w => el('option', { value: w.id }, w.label + (w.open === false ? ' (closed)' : ''))));
   $('fWeek').value = DATA.weeks.some(w => w.id === cur) ? cur : '';
   fillCourses();
 }
-
 function fillCourses() {
   const wk = $('fWeek').value, cur = $('fCourse').value, seen = new Map();
   DATA.weeks.filter(w => !wk || w.id === wk).forEach(w => w.courses.forEach(c => seen.set(c.id, c.title)));
-  $('fCourse').replaceChildren(
-    el('option', { value: '' }, 'All Quizzes'),
-    ...[...seen].map(([id, t]) => el('option', { value: id }, t))
-  );
+  $('fCourse').replaceChildren(el('option', { value: '' }, 'All quizzes'), ...[...seen].map(([id, t]) => el('option', { value: id }, t)));
   $('fCourse').value = seen.has(cur) ? cur : '';
 }
-
 $('fWeek').onchange = () => { fillCourses(); renderScores(); };
 ['fCourse', 'fMode'].forEach(i => $(i).onchange = renderScores);
 $('fSearch').oninput = renderScores;
 
-const COLS = [
-  ['name', 'Student'],
-  ['courseTitle', 'Quiz'],
-  ['weekLabel', 'Week'],
-  ['score', 'Score'],
-  ['percent', '%'],
-  ['seconds', 'Time'],
-  ['attempt', 'Attempt'],
-  ['at', 'Date']
-];
-
+const COLS = [['name', 'Name'], ['courseTitle', 'Quiz'], ['weekLabel', 'Week'], ['score', 'Score'], ['percent', '%'], ['seconds', 'Time'], ['attempt', 'Attempt'], ['at', 'Date']];
 function filtered() {
-  const wk = $('fWeek').value,
-        co = $('fCourse').value,
-        q = $('fSearch').value.trim().toLowerCase(),
-        mode = $('fMode').value;
-
-  let rows = DATA.results.filter(r =>
-    (!wk || r.week === wk) &&
-    (!co || r.course === co) &&
-    (!q || (r.name + ' ' + (r.contact || '')).toLowerCase().includes(q))
-  );
-
+  const wk = $('fWeek').value, co = $('fCourse').value, q = $('fSearch').value.trim().toLowerCase(), mode = $('fMode').value;
+  let rows = DATA.results.filter(r => (!wk || r.week === wk) && (!co || r.course === co) && (!q || (r.name + ' ' + (r.contact || '')).toLowerCase().includes(q)));
   if (mode === 'first') rows = rows.filter(r => r.attempt === 1);
   if (mode === 'best') {
     const best = new Map();
-    rows.forEach(r => {
-      const k = [r.week, r.course, r.name.toLowerCase()].join('|');
-      const b = best.get(k);
-      if (!b || r.score > b.score || (r.score === b.score && r.seconds < b.seconds)) best.set(k, r);
-    });
+    rows.forEach(r => { const k = [r.week, r.course, r.name.toLowerCase()].join('|'); const b = best.get(k); if (!b || r.score > b.score || (r.score === b.score && r.seconds < b.seconds)) best.set(k, r); });
     rows = [...best.values()];
   }
-
   const k = sort.k, d = sort.dir;
   return rows.sort((a, b) => (typeof a[k] === 'string' ? a[k].localeCompare(b[k]) : a[k] - b[k]) * d);
 }
-
 const fmtTime = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
 const fmtDate = t => new Date(t).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-
 function renderScores() {
   const rows = filtered();
-  $('thead').replaceChildren(
-    ...COLS.map(([k, l]) => el('th', {
-      onclick: () => {
-        sort = { k, dir: sort.k === k ? -sort.dir : (k === 'name' || k === 'courseTitle' || k === 'weekLabel' ? 1 : -1) };
-        renderScores();
-      }
-    }, l + (sort.k === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''))),
-    el('th', {}, '')
-  );
-
+  $('thead').replaceChildren(...COLS.map(([k, l]) => el('th', { onclick: () => { sort = { k, dir: sort.k === k ? -sort.dir : (k === 'name' || k === 'courseTitle' || k === 'weekLabel' ? 1 : -1) }; renderScores(); } }, l + (sort.k === k ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''))), el('th', {}, ''));
   $('tbody').replaceChildren(...(rows.length ? rows.map(r => el('tr', {},
-    el('td', {},
-      el('span', { style: 'font-weight:700' }, r.name),
-      r.contact ? el('small', { style: 'display:block;color:var(--text-sub);font-size:12px' }, r.contact) : null),
-    el('td', {}, r.courseTitle),
-    el('td', {}, r.weekLabel),
-    el('td', { style: 'font-family:Outfit,sans-serif;font-weight:700' }, r.score + ' / ' + r.total),
-    el('td', {}, el('span', { class: 'score-badge ' + (r.percent >= 70 ? 'hi' : r.percent >= 50 ? 'mid' : 'lo') }, r.percent + '%')),
-    el('td', { style: 'color:var(--text-sub)' }, fmtTime(r.seconds)),
-    el('td', { style: 'color:var(--text-sub)' }, '#' + r.attempt),
-    el('td', { style: 'color:var(--text-sub);font-size:12.5px' }, fmtDate(r.at)),
-    el('td', {}, el('button', {
-      class: 'btn-del',
-      onclick: async function () {
-        const ok = await confirm_('Delete score?', 'Attempt by ' + r.name + ' will be removed.');
-        if (!ok) return;
-        try {
-          await call('POST', { action: 'deleteResult', id: r.id });
-          await load();
-        } catch (e) {
-          alert(e.message);
-        }
-      }
-    }, 'Delete'))
-  )) : [el('tr', {}, el('td', { colspan: 9, style: 'text-align:center;padding:40px;color:var(--text-sub)' }, 'No submissions recorded yet.'))]));
-
+    el('td', {}, r.name, r.contact ? el('small', {}, r.contact) : null),
+    el('td', {}, r.courseTitle), el('td', {}, r.weekLabel),
+    el('td', {}, r.score + ' / ' + r.total),
+    el('td', {}, el('span', { class: 'pill ' + (r.percent >= 70 ? 'hi' : r.percent >= 50 ? 'mid' : 'lo') }, r.percent + '%')),
+    el('td', {}, fmtTime(r.seconds)), el('td', {}, '#' + r.attempt), el('td', {}, fmtDate(r.at)),
+    el('td', {}, el('button', { class: 'btn del', onclick: async () => { if (!confirm('Delete this attempt by ' + r.name + '?')) return; try { await call('POST', { action: 'deleteResult', id: r.id }); await load(); } catch (e) { alert(e.message); } } }, 'Delete'))))
+    : [el('tr', {}, el('td', { colspan: 9, class: 'empty' }, 'No attempts yet'))]));
   const people = new Set(rows.map(r => r.name.toLowerCase()));
-  $('sAttempts').textContent = rows.length;
-  $('sPeople').textContent = people.size;
+  $('sAttempts').textContent = rows.length; $('sPeople').textContent = people.size;
   $('sAvg').textContent = rows.length ? Math.round(rows.reduce((a, r) => a + r.percent, 0) / rows.length) + '%' : '0%';
-  $('count').textContent = rows.length + ' result' + (rows.length === 1 ? '' : 's') + ' found';
+  $('count').textContent = rows.length + ' result' + (rows.length === 1 ? '' : 's') + ' shown';
 }
-
 $('csv').onclick = () => {
   const esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-  const head = ['Student', 'Contact', 'Quiz', 'Week', 'Score', 'Total', 'Percent', 'Seconds', 'Attempt', 'Date'];
-  const lines = [head.map(esc).join(',')].concat(filtered().map(r => [
-    r.name, r.contact, r.courseTitle, r.weekLabel, r.score, r.total, r.percent, r.seconds, r.attempt, new Date(r.at).toISOString()
-  ].map(esc).join(',')));
-  const a = el('a', {
-    href: URL.createObjectURL(new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' })),
-    download: 'student-quiz-results.csv'
-  });
+  const head = ['Name', 'Contact', 'Quiz', 'Week', 'Score', 'Total', 'Percent', 'Seconds', 'Attempt', 'Date'];
+  const lines = [head.map(esc).join(',')].concat(filtered().map(r => [r.name, r.contact, r.courseTitle, r.weekLabel, r.score, r.total, r.percent, r.seconds, r.attempt, new Date(r.at).toISOString()].map(esc).join(',')));
+  const a = el('a', { href: URL.createObjectURL(new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv' })), download: 'quiz-scores.csv' });
   document.body.append(a); a.click(); a.remove();
 };
 
+/* ---- weeks ---- */
 function renderWeeks() {
   $('weekList').replaceChildren(...DATA.weeks.map((w, i) => {
     const n = DATA.results.filter(r => r.week === w.id).length;
-    let editOpen = false;
-
-    const editRow = el('div', { class: 'hidden', style: 'display:flex;gap:8px;margin:12px 0' });
-    const editInput = el('input', { type: 'text', value: w.label });
-    const editSaveBtn = el('button', {
-      class: 'btn-coral',
-      onclick: async () => {
-        const newLabel = editInput.value.trim();
-        if (!newLabel || newLabel === w.label) { editRow.classList.add('hidden'); editOpen = false; return; }
-        try {
-          await call('POST', { action: 'editWeek', week: w.id, label: newLabel });
-          await load();
-        } catch (e) { alert(e.message); }
-      }
-    }, 'Save');
-
-    editRow.append(editInput, editSaveBtn, el('button', {
-      class: 'btn-soft',
-      onclick: () => { editRow.classList.add('hidden'); editOpen = false; }
-    }, 'Cancel'));
-
-    return el('div', { class: 'module-card' },
-      el('div', { class: 'module-header' },
-        el('div', { class: 'module-title' },
-          w.label,
-          i === 0 ? el('span', { class: 'state-chip active' }, 'Current') : null,
-          w.open === false ? el('span', { class: 'state-chip closed' }, 'Closed') : null),
-        el('span', { style: 'font-size:13px;color:var(--text-sub)' }, n + ' attempts')),
-      el('div', { class: 'module-meta' },
-        w.courses.map(c => c.title + ' (' + c.count + ' questions)').join(' · ')),
-      editRow,
-      el('div', { class: 'module-actions' },
-        el('button', {
-          class: 'btn-soft',
-          onclick: async function () {
-            try {
-              await call('POST', { action: 'setOpen', week: w.id, open: w.open === false });
-              await load();
-            } catch (e) { alert(e.message); }
-          }
-        }, w.open === false ? 'Reopen for students' : 'Close for students'),
-        el('button', {
-          class: 'btn-soft',
-          onclick: () => {
-            editOpen = !editOpen;
-            editRow.classList.toggle('hidden', !editOpen);
-            if (editOpen) { editInput.value = w.label; editInput.focus(); }
-          }
-        }, 'Rename'),
-        el('button', {
-          class: 'btn-del',
-          onclick: async function () {
-            const ok = await confirm_('Delete week "' + w.label + '"?', 'Questions will be removed.');
-            if (!ok) return;
-            try {
-              await call('POST', { action: 'deleteWeek', week: w.id });
-              await load();
-            } catch (e) { alert(e.message); }
-          }
-        }, 'Delete Week')));
+    return el('div', { class: 'card' },
+      el('h3', {}, w.label + (i === 0 ? '  (current)' : '') + (w.open === false ? '  (closed)' : '')),
+      el('div', { class: 'meta' }, w.courses.map(c => c.title + ' (' + c.count + ')').join(' · ') + ' — ' + n + ' attempt' + (n === 1 ? '' : 's')),
+      el('div', { class: 'acts', style: 'display:flex;gap:8px;flex-wrap:wrap' },
+        el('button', { class: 'btn sec', onclick: async () => { try { await call('POST', { action: 'setOpen', week: w.id, open: w.open === false }); await load(); } catch (e) { alert(e.message); } } }, w.open === false ? 'Reopen for students' : 'Close for students'),
+        el('button', { class: 'btn del', onclick: async () => { if (!confirm('Delete "' + w.label + '" and its questions? Past scores are kept.')) return; try { await call('POST', { action: 'deleteWeek', week: w.id }); await load(); } catch (e) { alert(e.message); } } }, 'Delete week')));
   }));
 }
-
-$('wJson').addEventListener('input', () => {
-  const msg = $('wMsg'), val = $('wJson').value.trim();
-  if (!val) { msg.textContent = ''; return; }
-  try {
-    const courses = JSON.parse(val);
-    if (!Array.isArray(courses)) {
-      msg.style.color = 'var(--coral)';
-      msg.textContent = 'JSON must be a list of courses [ … ]';
-      return;
-    }
-    const qCount = courses.reduce((a, c) => a + (Array.isArray(c.questions) ? c.questions.length : 0), 0);
-    msg.style.color = 'var(--teal)';
-    msg.textContent = '✓ Ready: ' + courses.length + ' course(s), ' + qCount + ' question(s)';
-  } catch (e) {
-    msg.style.color = 'var(--coral)';
-    msg.textContent = 'Invalid JSON: ' + e.message;
-  }
-});
-
 $('wTemplate').onclick = () => {
-  $('wJson').value = JSON.stringify([{
-    title: 'Introduction to Marketing',
-    code: 'MKT101',
-    timePerQ: 30,
-    questions: [
-      {
-        q: 'What does the first P in the 4Ps of marketing stand for?',
-        opts: ['Product', 'Profit', 'People', 'Paper'],
-        ans: 'Product',
-        why: 'The 4Ps are product, price, place and promotion.'
-      }
-    ]
-  }], null, 2);
-  $('wJson').dispatchEvent(new Event('input'));
+  $('wJson').value = JSON.stringify([{ title: 'Introduction to Marketing', code: 'MKT101', timePerQ: 30, questions: [
+    { q: 'What does the first P in the 4Ps of marketing stand for?', opts: ['Product', 'Profit', 'People', 'Paper'], ans: 'Product', why: 'The 4Ps are product, price, place and promotion.' },
+    { q: 'Which P covers advertising and sales offers?', opts: ['Promotion', 'Price', 'Place', 'Product'], ans: 'Promotion', why: 'Promotion is how a business communicates with customers.' }] }], null, 2);
 };
-
+function parseQuiz(text) {
+  try { return JSON.parse(text); } catch (first) {
+    // Repair common paste problems: BOM, code fences, phone smart quotes around keys/strings
+    let s = text.replace(/^\ufeff/, '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')
+      .replace(/[\u201C\u201D\u201E\u201F]/g, '"').replace(/[\u00A0\u200B]/g, ' ');
+    try { return JSON.parse(s); } catch (second) { throw new Error(first.message); }
+  }
+}
+$('wFile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { $('wJson').value = String(r.result).replace(/^\ufeff/, ''); $('wFileName').textContent = f.name + ' loaded'; };
+  r.onerror = () => { $('wFileName').textContent = 'Could not read that file'; };
+  r.readAsText(f);
+};
 $('wCreate').onclick = async () => {
-  const msg = $('wMsg'), label = $('wLabel').value.trim();
-  let courses;
-  try { courses = JSON.parse($('wJson').value); } catch {
-    msg.style.color = 'var(--coral)';
-    msg.textContent = 'Please enter valid JSON before publishing.';
-    return;
-  }
+  const msg = $('wMsg'); msg.className = ''; msg.textContent = '';
+  const label = $('wLabel').value.trim();
+  if (!$('wJson').value.trim()) { msg.className = 'err'; msg.textContent = 'Choose the JSON file or paste the questions first.'; return; }
+  let courses; try { courses = parseQuiz($('wJson').value); } catch (e) { msg.className = 'err'; msg.textContent = 'Could not read the questions (' + e.message + '). Use "Choose JSON file" instead of pasting, or make sure you copied the whole file from the first [ to the last ].'; return; }
   $('wCreate').disabled = true;
-  try {
-    await call('POST', { action: 'createWeek', label, courses });
-    msg.style.color = 'var(--teal)';
-    msg.textContent = '✓ Week published successfully!';
-    $('wLabel').value = '';
-    $('wJson').value = '';
-    await load();
-  } catch (e) {
-    msg.style.color = 'var(--coral)';
-    msg.textContent = e.message;
-  } finally {
-    $('wCreate').disabled = false;
-  }
+  try { await call('POST', { action: 'createWeek', label, courses }); msg.className = 'ok'; msg.textContent = 'Published. It is now the current week.'; $('wLabel').value = ''; $('wJson').value = ''; await load(); }
+  catch (e) { msg.className = 'err'; msg.textContent = e.message; }
+  $('wCreate').disabled = false;
 };
 
 if (PW) load().catch(() => signOut(''));
